@@ -1,0 +1,3628 @@
+<!DOCTYPE html> html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, viewport-fit=cover"
+    />
+    <title>Sakina</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,800&family=Figtree:wght@400;600&family=Cairo:wght@400;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <!-- App Icon for iPhone & iPad -->
+    <link rel="apple-touch-icon" href="icon.png" />
+    <!-- App Icon for Android & Web -->
+    <link rel="icon" type="image/png" sizes="512x512" href="icon.png" />
+    <style>
+      /* Hide CodeSandbox overlay floating buttons */
+      #csb-devtools,
+      [class*="codesandbox"],
+      [id*="csb-"],
+      iframe[src*="codesandbox"] {
+        display: none !important;
+        visibility: hidden !important;
+        pointer-events: none !important;
+      }
+      :root {
+        --bg: #0f3d3e;
+        --p: #7fe0c0;
+        --a: #f2d388;
+        --ink: #f6f7f2;
+        box-sizing: border-box;
+        padding-top: env(safe-area-inset-top, 0px);
+        padding-bottom: env(safe-area-inset-bottom, 0px);
+      }
+      * {
+        box-sizing: border-box;
+      }
+      html {
+        scroll-padding-top: env(safe-area-inset-top, 0px);
+      }
+      body {
+        margin: 0;
+        background: var(--bg);
+        color: var(--ink);
+        font: 400 16px/1.45 Figtree, system-ui, sans-serif;
+        min-height: 100vh;
+        transition: background 0.4s, color 0.4s;
+        padding-bottom: 90px !important;
+      }
+      h1,
+      h2,
+      h3 {
+        font-family: "Bricolage Grotesque", Figtree, sans-serif;
+        margin: 0;
+        font-weight: 800;
+        letter-spacing: -0.01em;
+      }
+      [lang="ar"] body,
+      [lang="ar"] button,
+      [lang="ar"] input,
+      [lang="ar"] select,
+      [lang="ar"] textarea {
+        font-family: Cairo, Figtree, sans-serif;
+      }
+      [lang="ar"] h1,
+      [lang="ar"] h2,
+      [lang="ar"] h3,
+      [lang="ar"] .clock,
+      [lang="ar"] .orb {
+        font-family: Cairo, sans-serif;
+        letter-spacing: 0;
+      }
+      button,
+      input,
+      select {
+        font: inherit;
+        color: inherit;
+      }
+      button {
+        cursor: pointer;
+      }
+      :focus-visible {
+        outline: 3px solid var(--a);
+        outline-offset: 2px;
+      }
+      .app {
+        max-width: 520px;
+        margin: 0 auto;
+        padding: 12px 16px 96px;
+      }
+      .surf {
+        background: color-mix(in srgb, var(--p) 12%, var(--bg));
+        border-radius: 22px;
+        padding: 16px;
+        margin: 12px 0;
+      }
+      .mut {
+        opacity: 0.72;
+        font-size: 14px;
+      }
+      .btn {
+        background: var(--p);
+        color: var(--bg);
+        border: 0;
+        border-radius: 999px;
+        padding: 10px 18px;
+        font-weight: 600;
+      }
+      .btn:disabled {
+        opacity: 0.45;
+        cursor: default;
+      }
+      .btn.alt {
+        background: transparent;
+        color: var(--ink);
+        border: 1.5px solid color-mix(in srgb, var(--ink) 35%, transparent);
+      }
+      .btn.sm {
+        padding: 6px 12px;
+        font-size: 14px;
+      }
+      select option {
+        color: #111;
+        background: #fff;
+      }
+      input,
+      select,
+      textarea {
+        background: color-mix(in srgb, var(--ink) 8%, var(--bg));
+        border: 1.5px solid color-mix(in srgb, var(--p) 40%, transparent);
+        border-radius: 12px;
+        padding: 9px 12px;
+        width: 100%;
+      }
+      .row {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+      .sp {
+        justify-content: space-between;
+      }
+      .top {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 8px 0;
+      }
+      .ic {
+        width: 44px;
+        height: 44px;
+        border-radius: 50%;
+        border: 0;
+        background: color-mix(in srgb, var(--p) 20%, var(--bg));
+        display: grid;
+        place-items: center;
+        font-size: 20px;
+      }
+      .tabs {
+        position: fixed;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        display: flex;
+        justify-content: center;
+        gap: 4px;
+        padding: 10px 8px calc(10px + env(safe-area-inset-bottom, 0px));
+        background: color-mix(in srgb, var(--bg) 92%, var(--ink));
+        z-index: 99999;
+        border-top: 1px solid color-mix(in srgb, var(--ink) 15%, transparent);
+      }
+      .tabs button {
+        flex: 1;
+        max-width: 120px;
+        border: 0;
+        border-radius: 16px;
+        padding: 12px 2px;
+        background: transparent;
+        font-weight: 600;
+        font-size: 13px;
+        opacity: 0.7;
+        color: var(--ink);
+      }
+      .tabs button.on {
+        background: var(--p);
+        color: var(--bg);
+        opacity: 1;
+        font-weight: 800;
+      }
+      .quick {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 10px;
+      }
+      .quick button {
+        aspect-ratio: 1;
+        border: 0;
+        border-radius: 24px;
+        background: color-mix(in srgb, var(--p) 18%, var(--bg));
+        font-size: 30px;
+        display: grid;
+        place-items: center;
+        align-content: center;
+        gap: 2px;
+      }
+      .quick small {
+        font: 600 12px Figtree;
+      }
+      .pr {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 10px 0;
+        border-bottom: 1px solid color-mix(in srgb, var(--ink) 12%, transparent);
+      }
+      .pr:last-child {
+        border: 0;
+      }
+      .chk {
+        width: 30px;
+        height: 30px;
+        flex: none;
+        border-radius: 50%;
+        border: 2px solid var(--p);
+        background: transparent;
+        color: var(--bg);
+        font-weight: 800;
+      }
+      .chk.on {
+        background: var(--p);
+      }
+      .dn {
+        text-decoration: line-through;
+        opacity: 0.55;
+      }
+      .bar {
+        height: 8px;
+        border-radius: 9px;
+        background: color-mix(in srgb, var(--ink) 15%, transparent);
+        overflow: hidden;
+      }
+      .bar i {
+        display: block;
+        height: 100%;
+        background: var(--a);
+        border-radius: 9px;
+        transition: width 0.3s;
+      }
+      .ar {
+        font: 400 24px/1.7 "Amiri", "Noto Naskh Arabic", serif;
+        direction: rtl;
+      }
+      .cups {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+      }
+      .cup {
+        width: 38px;
+        height: 46px;
+        border-radius: 6px 6px 14px 14px;
+        border: 2px solid var(--p);
+        background: transparent;
+      }
+      .cup.on {
+        background: var(--p);
+      }
+      .mode {
+        display: block;
+        width: 100%;
+        text-align: start;
+        background: transparent;
+        border: 1.5px solid var(--p);
+        border-radius: 16px;
+        padding: 12px 14px;
+        margin: 8px 0;
+      }
+      .mode b {
+        display: block;
+        margin-bottom: 2px;
+      }
+      .mode span {
+        font-size: 14px;
+        opacity: 0.85;
+      }
+      .mode.on {
+        background: var(--p);
+        color: var(--bg);
+      }
+      .sway {
+        transform-origin: 120px 190px;
+        animation: sway 7s ease-in-out infinite;
+      }
+      @keyframes sway {
+        0%,
+        100% {
+          transform: rotate(-1deg);
+        }
+        50% {
+          transform: rotate(1.2deg);
+        }
+      }
+      @keyframes twk {
+        0%,
+        100% {
+          opacity: 0.3;
+        }
+        50% {
+          opacity: 1;
+        }
+      }
+      .twk {
+        animation: twk 2.6s ease-in-out infinite;
+      }
+      @keyframes fall {
+        0% {
+          transform: translate(0, 0) rotate(0);
+          opacity: 0;
+        }
+        15% {
+          opacity: 0.95;
+        }
+        100% {
+          transform: translate(-26px, 95px) rotate(260deg);
+          opacity: 0;
+        }
+      }
+      .pet {
+        transform-box: fill-box;
+        transform-origin: center;
+        animation: fall 7s linear infinite;
+      }
+      .cup.over {
+        border-color: var(--a);
+      }
+      .cup.over.on {
+        background: var(--a);
+      }
+      .orb {
+        width: 180px;
+        height: 180px;
+        border-radius: 50%;
+        background: radial-gradient(circle at 35% 30%, var(--a), var(--p));
+        display: grid;
+        place-items: center;
+        color: var(--bg);
+        font: 800 20px "Bricolage Grotesque";
+      }
+      .orbwrap {
+        height: 300px;
+        display: grid;
+        place-items: center;
+      }
+      .pills {
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+      }
+      .pill {
+        border: 1.5px solid var(--p);
+        background: transparent;
+        border-radius: 999px;
+        padding: 7px 14px;
+      }
+      .pill.on {
+        background: var(--p);
+        color: var(--bg);
+      }
+      .sw {
+        display: flex;
+        border-radius: 16px;
+        overflow: hidden;
+        border: 3px solid transparent;
+        background: none;
+        padding: 0;
+        outline: 1px solid color-mix(in srgb, var(--ink) 25%, transparent);
+      }
+      .sw.on {
+        border-color: var(--ink);
+      }
+      .sw span {
+        width: 26px;
+        height: 40px;
+      }
+      .ob {
+        padding-top: 24px;
+      }
+      .ob h1 {
+        font-size: 34px;
+        margin-bottom: 6px;
+      }
+      .grid {
+        display: grid;
+        grid-template-columns: 42px repeat(7, 1fr);
+        gap: 3px;
+        font-size: 12px;
+        margin-top: 8px;
+      }
+      .tl {
+        opacity: 0.65;
+        align-self: center;
+        text-align: right;
+        padding-right: 4px;
+      }
+      .dh {
+        border: 0;
+        background: transparent;
+        font-weight: 600;
+        padding: 6px 0;
+        font-size: 12px;
+      }
+      .cell {
+        height: 26px;
+        border-radius: 6px;
+        border: 1px solid color-mix(in srgb, var(--ink) 20%, transparent);
+        background: transparent;
+        padding: 0;
+      }
+      .cell.on {
+        background: var(--p);
+        border-color: var(--p);
+      }
+      .clock {
+        font: 800 68px/1 "Bricolage Grotesque";
+        text-align: center;
+        margin: 14px 0 10px;
+        font-variant-numeric: tabular-nums;
+      }
+      .num {
+        width: 80px;
+      }
+      @media (prefers-reduced-motion: reduce) {
+        * {
+          animation: none !important;
+          transition: none !important;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="app" id="app"></div>
+    <script>
+      const THEMES = [
+        { n: "Lagoon", c: ["#0f3d3e", "#7fe0c0", "#f2d388"], k: "#f6f7f2" },
+        { n: "Forest", c: ["#10281c", "#8fd694", "#f1e6b8"], k: "#f4f7f0" },
+        { n: "Midnight", c: ["#0b1226", "#6ea8ff", "#c9d6ff"], k: "#f2f5ff" },
+        { n: "Dusk", c: ["#2b2a5c", "#b9a8ff", "#ffb38a"], k: "#f6f4ff" },
+        { n: "Blush", c: ["#fdeef4", "#c0306f", "#7a3a9c"], k: "#3a1428" },
+        { n: "Lilac", c: ["#f1ecfb", "#6d4bc4", "#d4467d"], k: "#251a44" },
+      ];
+      const MSG = {
+        water: [
+          "Hydration check — go drink some water.",
+          "Bro, you’re not a cactus — stay hydrated.",
+          "Water break unlocked — go take a sip.",
+          "Low battery? — recharge with some water.",
+          "Sip happens — time for a water break.",
+        ],
+        calm: [
+          "Pause. Breathe. Reset. — take 5 minutes for yourself.",
+          "Reset mode: ON — inhale peace, exhale stress.",
+          "Your brain deserves a break — step away for a minute.",
+          "It’s okay to slow down — you’re not a robot.",
+          "You good? — take a moment to check in with yourself.",
+        ],
+        study: [
+          "Lock-in mode — one task, one goal.",
+          "The comeback starts now — one task at a time.",
+          "Procrastination called — don’t answer.",
+          "Future you says thanks — get that revision done.",
+          "25 minutes. No distractions. — let’s get to work.",
+        ],
+        salah: [
+          "Pause the scroll — it’s time for Salah.",
+          "Time to reconnect — don’t forget your Salah.",
+          "A reminder for your heart — take a moment for prayer.",
+        ],
+        dhikr: [
+          "A little dhikr, a little peace — take a moment to remember Allah.",
+          "Feed your soul, not just your feed — make time for remembrance.",
+        ],
+      };
+      const PN = ["Fajr", "Dhuhr", "Asr", "Maghrib", "Isha"];
+      const AZS = {
+        m: [
+          "Morning",
+          [
+            [
+              "Morning praise",
+              1,
+              "أَصْبَحْنَا وَأَصْبَحَ الْمُلْكُ لِلَّهِ، وَالْحَمْدُ لِلَّهِ، لَا إِلَهَ إِلَّا اللَّهُ وَحْدَهُ لَا شَرِيكَ لَهُ",
+            ],
+            [
+              "Dawn dua",
+              1,
+              "اللَّهُمَّ بِكَ أَصْبَحْنَا، وَبِكَ أَمْسَيْنَا، وَبِكَ نَحْيَا، وَبِكَ نَمُوتُ، وَإِلَيْكَ النُّشُورُ",
+            ],
+            [
+              "Protection",
+              3,
+              "بِسْمِ اللَّهِ الَّذِي لَا يَضُرُّ مَعَ اسْمِهِ شَيْءٌ فِي الْأَرْضِ وَلَا فِي السَّمَاءِ وَهُوَ السَّمِيعُ الْعَلِيمُ",
+            ],
+            [
+              "Contentment",
+              3,
+              "رَضِيتُ بِاللَّهِ رَبًّا، وَبِالْإِسْلَامِ دِينًا، وَبِمُحَمَّدٍ نَبِيًّا",
+            ],
+            [
+              "Reliance",
+              7,
+              "حَسْبِيَ اللَّهُ لَا إِلَهَ إِلَّا هُوَ عَلَيْهِ تَوَكَّلْتُ وَهُوَ رَبُّ الْعَرْشِ الْعَظِيمِ",
+            ],
+            ["Glorify", 100, "سُبْحَانَ اللَّهِ وَبِحَمْدِهِ"],
+            [
+              "The three Quls",
+              3,
+              "قُلْ هُوَ ٱللَّهُ أَحَدٌ ... (Ikhlas, Falaq, Nas)",
+            ],
+          ],
+        ],
+        e: [
+          "Evening",
+          [
+            [
+              "Evening praise",
+              1,
+              "أَمْسَيْنَا وَأَمْسَى الْمُلْكُ لِلَّهِ، وَالْحَمْدُ لِلَّهِ، لَا إِلَهَ إِلَّا اللَّهُ وَحْدَهُ لَا شَرِيكَ لَهُ",
+            ],
+            [
+              "Dusk dua",
+              1,
+              "اللَّهُمَّ بِكَ أَمْسَيْنَا، وَبِكَ أَصْبَحْنَا، وَبِكَ نَحْيَا، وَبِكَ نَمُوتُ، وَإِلَيْكَ الْمَصِيرُ",
+            ],
+            [
+              "Protection",
+              3,
+              "بِسْمِ اللَّهِ الَّذِي لَا يَضُرُّ مَعَ اسْمِهِ شَيْءٌ فِي الْأَرْضِ وَلَا فِي السَّمَاءِ وَهُوَ السَّمِيعُ الْعَلِيمُ",
+            ],
+            [
+              "Refuge",
+              3,
+              "أَعُوذُ بِكَلِمَاتِ اللَّهِ التَّامَّاتِ مِنْ شَرِّ مَا خَلَقَ",
+            ],
+            [
+              "Reliance",
+              7,
+              "حَسْبِيَ اللَّهُ لَا إِلَهَ إِلَّا هُوَ عَلَيْهِ تَوَكَّلْتُ وَهُوَ رَبُّ الْعَرْشِ الْعَظِيمِ",
+            ],
+            ["Glorify", 100, "سُبْحَانَ اللَّهِ وَبِحَمْدِهِ"],
+            [
+              "The three Quls",
+              3,
+              "قُلْ هُوَ ٱللَّهُ أَحَدٌ ... (Ikhlas, Falaq, Nas)",
+            ],
+          ],
+        ],
+        s: [
+          "Night",
+          [
+            ["Before sleep", 1, "بِاسْمِكَ اللَّهُمَّ أَمُوتُ وَأَحْيَا"],
+            [
+              "The three Quls",
+              3,
+              "قُلْ هُوَ ٱللَّهُ أَحَدٌ ... (Ikhlas, Falaq, Nas)",
+            ],
+            ["Tasbih", 33, "سُبْحَانَ ٱللَّٰهِ"],
+            ["Tahmid", 33, "ٱلْحَمْدُ لِلَّٰهِ"],
+            ["Takbir", 34, "ٱللَّٰهُ أَكْبَرُ"],
+          ],
+        ],
+        p: [
+          "After prayer",
+          [
+            ["SubhanAllah", 33, "سُبْحَانَ ٱللَّٰهِ"],
+            ["Alhamdulillah", 33, "ٱلْحَمْدُ لِلَّٰهِ"],
+            ["Allahu Akbar", 34, "ٱللَّٰهُ أَكْبَرُ"],
+            ["Astaghfirullah", 10, "أَسْتَغْفِرُ ٱللَّٰهَ"],
+          ],
+        ],
+      };
+      const DAYS = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+      const HRS = [...Array(18)].map((_, i) => i + 6);
+      const today = () => new Date().toDateString();
+      const yest = () => new Date(Date.now() - 864e5).toDateString();
+      const fresh = () => ({
+        done: true,
+        step: 0,
+        goal: 8,
+        cups: 0,
+        onTime: "yes",
+        theme: 0,
+        notif: true,
+        day: today(),
+        prayed: {},
+        azkar: {},
+        goals: [],
+        mood: null,
+        fired: {},
+        busy: {},
+        todos: [],
+        streak: 0,
+        last: "",
+        pomo: { f: 25, b: 5 },
+        azs: "m",
+        name: "",
+        gender: "",
+        lg: -1,
+        hist: {},
+        fc: 0,
+        tdn: 0,
+        gr: "",
+        cnt: 0,
+        lastN: 0,
+        qs: 22,
+        qe: 6,
+        bed: 22,
+        ign: {},
+        pend: {},
+        chd: {},
+        top3: [],
+        exams: [],
+        rtest: false,
+        kahf: "",
+        lang: "en",
+        mode: "",
+        ram: true,
+        age: "",
+        wm: "",
+      });
+      let S;
+      try {
+        S = Object.assign(
+          fresh(),
+          JSON.parse(localStorage.getItem("sakina")) || {}
+        );
+        S.done = false;
+      } catch (e) {
+        S = fresh();
+      }
+      if (S.day !== today()) {
+        Object.assign(S, {
+          day: today(),
+          cups: 0,
+          prayed: {},
+          azkar: {},
+          fired: {},
+          mood: null,
+          wm: "",
+          fc: 0,
+          tdn: 0,
+          gr: "",
+          cnt: 0,
+          top3: [],
+        });
+        S.goals.forEach((g) => (g.spent = 0));
+      }
+      let tab = "today",
+        loc = { lat: 21.42, lng: 39.82, ok: false },
+        PT = [],
+        running = -1,
+        br = null,
+        pk = false;
+      let pm = { mode: "f", left: S.pomo.f * 60, run: false, n: 0 };
+      const save = () => {
+        try {
+          snap();
+        } catch (e) {}
+        try {
+          localStorage.setItem("sakina", JSON.stringify(S));
+        } catch (e) {}
+      };
+      const $ = (s) => document.querySelector(s);
+      const pick = (a) => a[Math.floor(Math.random() * a.length)];
+      const esc = (s) =>
+        String(s).replace(
+          /[&<>"]/g,
+          (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c])
+        );
+      const mmss = (s) =>
+        String(Math.floor(s / 60)).padStart(2, "0") +
+        ":" +
+        String(s % 60).padStart(2, "0");
+      function applyTheme() {
+        const t = THEMES[S.theme],
+          r = document.documentElement.style;
+        r.setProperty("--bg", t.c[0]);
+        r.setProperty("--p", t.c[1]);
+        r.setProperty("--a", t.c[2]);
+        r.setProperty("--ink", t.k);
+      }
+      function calcTimes(lat, lng) {
+        const n = new Date(),
+          base = Date.UTC(n.getFullYear(), n.getMonth(), n.getDate()),
+          R = Math.PI / 180;
+        const D = (base + 43200000) / 86400000 + 2440587.5 - 2451545,
+          g = (357.529 + 0.98560028 * D) % 360,
+          q = (280.459 + 0.98564736 * D) % 360,
+          L = q + 1.915 * Math.sin(g * R) + 0.02 * Math.sin(2 * g * R),
+          e = 23.439 - 3.6e-7 * D,
+          RA =
+            Math.atan2(Math.cos(e * R) * Math.sin(L * R), Math.cos(L * R)) /
+            R /
+            15,
+          dec = Math.asin(Math.sin(e * R) * Math.sin(L * R)) / R;
+        let eq = q / 15 - RA;
+        eq = eq - 24 * Math.round(eq / 24);
+        const noon = 12 - lng / 15 - eq,
+          T = (a) =>
+            Math.acos(
+              (-Math.sin(a * R) - Math.sin(dec * R) * Math.sin(lat * R)) /
+                (Math.cos(dec * R) * Math.cos(lat * R))
+            ) /
+            R /
+            15;
+        const A = Math.atan(1 / (1 + Math.tan(Math.abs(lat - dec) * R))) / R,
+          asr =
+            Math.acos(
+              (Math.sin(A * R) - Math.sin(dec * R) * Math.sin(lat * R)) /
+                (Math.cos(dec * R) * Math.cos(lat * R))
+            ) /
+            R /
+            15;
+        return [
+          noon - T(18),
+          noon + 0.02,
+          noon + asr,
+          noon + T(0.833),
+          noon + T(17),
+        ].map((h) => new Date(base + h * 3600000));
+      }
+      function setTimes() {
+        try {
+          PT = calcTimes(loc.lat, loc.lng);
+        } catch (e) {
+          PT = [];
+        }
+      }
+      const hl = (h) => {
+        const x = h % 24;
+        return (x % 12 || 12) + " " + (x < 12 ? "AM" : "PM");
+      };
+      const fmt = (d) =>
+        isNaN(d)
+          ? "--:--"
+          : d.toLocaleTimeString([], {
+              hour: "numeric",
+              minute: "2-digit",
+              hour12: true,
+            });
+      function getLoc() {
+        setTimes();
+        if (navigator.geolocation)
+          navigator.geolocation.getCurrentPosition(
+            (p) => {
+              loc = {
+                lat: p.coords.latitude,
+                lng: p.coords.longitude,
+                ok: true,
+              };
+              setTimes();
+              render();
+            },
+            () => {},
+            { timeout: 8000 }
+          );
+      }
+      function notify(m) {
+        if (!document.hidden || !S.notif) return;
+        const [t, ...b] = T(m).split(" — ");
+        try {
+          if (Notification.permission === "granted")
+            new Notification(t, { body: b.join(" — ") });
+        } catch (e) {}
+      }
+      function once(k, m, t) {
+        if (!document.hidden || S.fired[k]) return;
+        if (t !== "salah" && t !== "wind") {
+          const h = new Date().getHours(),
+            q = S.qs > S.qe ? h >= S.qs || h < S.qe : h >= S.qs && h < S.qe;
+          if (
+            q ||
+            Date.now() - S.lastN < 45 * 6e4 ||
+            S.cnt >= 6 ||
+            (S.mode === "exam" && t !== "study") ||
+            (S.mode === "holiday" && t === "study")
+          )
+            return;
+          if ((S.ign[t] || 0) >= 3 && Math.random() < 0.5) {
+            S.fired[k] = 1;
+            return;
+          }
+          if (S.pend[t]) S.ign[t] = (S.ign[t] || 0) + 1;
+          S.pend[t] = Date.now();
+          S.cnt++;
+          S.lastN = Date.now();
+        }
+        S.fired[k] = 1;
+        notify(m);
+        save();
+      }
+      function freeToday() {
+        const d = new Date().getDay();
+        let r = [],
+          s = null;
+        HRS.forEach((h) => {
+          const f = !S.busy[d + "_" + h];
+          if (f && s == null) s = h;
+          if (!f && s != null) {
+            r.push(hl(s) + " – " + hl(h));
+            s = null;
+          }
+        });
+        if (s != null) r.push(hl(s) + " – 12 AM");
+        return r;
+      }
+      function rollDay() {
+        if (S.day === today()) return false;
+        Object.assign(S, {
+          day: today(),
+          cups: 0,
+          prayed: {},
+          azkar: {},
+          fired: {},
+          mood: null,
+          mm: "",
+          wm: "",
+          fc: 0,
+          tdn: 0,
+          gr: "",
+          cnt: 0,
+          top3: [],
+        });
+        S.goals.forEach((g) => (g.spent = 0));
+        pm.n = 0;
+        return true;
+      }
+      function tick() {
+        if (rollDay()) {
+          save();
+          render();
+        }
+        if (!S.done || !S.notif) return;
+        const n = new Date(),
+          h = n.getHours(),
+          mn = n.getMinutes(),
+          mins = h * 60 + mn;
+        PT.forEach((t, i) => {
+          if (S.prayed[i]) return;
+          const d = (n - t) / 60000;
+          if (d >= 5 && d < 30) once("a" + i, pick(MSG.salah), "salah");
+          const nx = PT[i + 1];
+          if (nx) {
+            const u = (nx - n) / 60000;
+            if (u > 0 && u <= 20)
+              once(
+                "b" + i,
+                "Pause the scroll — " +
+                  PN[i] +
+                  " is almost over, have you prayed?",
+                "salah"
+              );
+          }
+        });
+        if (
+          h >= 8 &&
+          h < 22 &&
+          mins % 120 < 2 &&
+          S.cups < S.goal &&
+          !fastingNow()
+        )
+          once("w" + Math.floor(mins / 120), pick(MSG.water), "water");
+        if ([11, 15, 20].includes(h) && mn < 2)
+          once("c" + h, pick(MSG.calm), "calm");
+        if ([9, 17].includes(h) && mn < 2)
+          once("d" + h, pick(MSG.dhikr), "dhikr");
+        if ([13, 19].includes(h) && mn < 2)
+          once("m" + h, pick(MSG.mood), "mood");
+        if (
+          HRS.includes(h) &&
+          !S.busy[n.getDay() + "_" + h] &&
+          mn < 2 &&
+          (S.goals.length || S.todos.some((t) => !t.d))
+        )
+          once("s" + h, pick(MSG.study), "study");
+        tickExtra(n, h, mn, mins);
+      }
+      setInterval(tick, 20000);
+      function pmNext(auto) {
+        if (pm.mode === "f") {
+          if (auto) {
+            pm.n++;
+            S.fc++;
+            save();
+          }
+          pm.mode = "b";
+          pm.left = S.pomo.b * 60;
+          notify("Break time — stretch, sip some water, rest your eyes.");
+        } else {
+          pm.mode = "f";
+          pm.left = S.pomo.f * 60;
+          notify(pick(MSG.study));
+        }
+      }
+      function pUI() {
+        const t = $("#pt");
+        if (!t) return;
+        t.textContent = mmss(pm.left);
+        $("#pl").textContent = T(pm.mode === "f" ? "Focus" : "Break");
+        $("#pbar").style.width =
+          100 -
+          (pm.left / ((pm.mode === "f" ? S.pomo.f : S.pomo.b) * 60)) * 100 +
+          "%";
+      }
+      function tickUI() {
+        S.goals.forEach((g, i) => {
+          const b = $("#gb" + i),
+            t = $("#gt" + i);
+          if (b)
+            b.style.width =
+              Math.min(100, ((g.spent || 0) / (g.lim * 60)) * 100) + "%";
+          if (t)
+            t.textContent = T(
+              Math.floor((g.spent || 0) / 60) + " / " + g.lim + " min"
+            );
+        });
+      }
+      setInterval(() => {
+        if (running >= 0) {
+          const g = S.goals[running];
+          g.spent = (g.spent || 0) + 1;
+          if (g.spent === g.lim * 60)
+            notify(
+              "Time’s up for " + g.n + " — your limit is reached, take a break."
+            );
+          if (g.spent % 10 === 0) save();
+          if (tab === "study") tickUI();
+        }
+        if (pm.run) {
+          pm.left--;
+          if (pm.left <= 0) {
+            pmNext(true);
+            if (tab === "study") render();
+          } else if (tab === "study") pUI();
+        }
+      }, 1000);
+      function topbar() {
+        return (
+          '<div class="top"><button class="ic" data-a="themes" aria-label="Choose theme">🎨</button><h2>Sakina</h2><button class="ic" data-a="settings" aria-label="Settings">⚙️</button></div>' +
+          (pk
+            ? `<div class="surf pills" style="justify-content:center">${THEMES.map(
+                sw
+              ).join("")}</div>`
+            : "")
+        );
+      }
+      const sw = (t, i) =>
+        `<button class="sw ${
+          S.theme === THEMES.indexOf(t) ? "on" : ""
+        }" data-a="th" data-v="${THEMES.indexOf(t)}" aria-label="${t.n}">${t.c
+          .map((c) => `<span style="background:${c}"></span>`)
+          .join("")}</button>`;
+      function grid() {
+        return gridHtml() + rsBtn();
+      }
+      function gridHtml() {
+        return (
+          '<div class="grid"><span></span>' +
+          DAYS.map(
+            (d, i) =>
+              `<button class="dh" data-a="dayfill" data-i="${i}">${d}</button>`
+          ).join("") +
+          HRS.map(
+            (h) =>
+              `<span class="tl">${hl(h)}</span>` +
+              DAYS.map(
+                (d, i) =>
+                  `<button class="cell ${
+                    S.busy[i + "_" + h] ? "on" : ""
+                  }" data-a="cell" data-k="${i}_${h}" aria-label="${d} ${hl(
+                    h
+                  )}"></button>`
+              ).join("")
+          ).join("") +
+          "</div>"
+        );
+      }
+      const goalForm = () =>
+        `<div class="row"><input id="gn" placeholder="Subject, e.g. Maths"><input id="gl" class="num" type="number" value="45" min="5" aria-label="Daily minutes"><button class="btn sm" data-a="addg">Add</button></div>` +
+        S.goals
+          .map(
+            (g, i) =>
+              `<div class="row sp mut" style="margin-top:8px"><span>${esc(
+                g.n
+              )} · ${
+                g.lim
+              } min/day</span><button class="btn alt sm" data-a="delg" data-i="${i}">Remove</button></div>`
+          )
+          .join("");
+      function ob() {
+        const s = S.step,
+          w = (n) => `<div class="surf">${n}</div>`;
+        let b = "";
+        if (s === 0)
+          b =
+            langCard() +
+            w(
+              `<h3>About you</h3><input id="qn" placeholder="Your name" value="${esc(
+                S.name
+              )}" aria-label="Your name"><input id="qa" type="number" min="3" max="100" placeholder="Your age" value="${
+                S.age || ""
+              }" aria-label="Your age" style="margin-top:10px"><div class="pills" style="margin-top:10px">${[
+                "Male",
+                "Female",
+              ]
+                .map(
+                  (v) =>
+                    `<button class="pill ${
+                      S.gender === v ? "on" : ""
+                    }" data-a="gd" data-v="${v}">${v}</button>`
+                )
+                .join("")}</div>`
+            ) +
+            w(
+              `<h3>Your water</h3><p class="mut">How many glasses do you usually drink in a day?</p><input id="q1" type="number" min="0" max="20" value="${
+                S.usual || ""
+              }" placeholder="e.g. 4"><p class="mut">And your daily goal?</p><input id="q2" type="number" min="1" max="20" value="${
+                S.goal
+              }"><p class="mut" id="rec" style="margin:10px 0 0">${recText()}</p><p class="mut" style="margin:4px 0 0;font-size:12px">A general guide, not medical advice.</p>`
+            ) +
+            w(
+              `<h3>Do you pray on time?</h3><div class="pills">${[
+                "yes",
+                "sometimes",
+                "not yet",
+              ]
+                .map(
+                  (v) =>
+                    `<button class="pill ${
+                      S.onTime === v ? "on" : ""
+                    }" data-a="ot" data-v="${v}">${v}</button>`
+                )
+                .join("")}</div>`
+            );
+        if (s === 1)
+          b =
+            w(
+              `<h3>Pick your colours</h3><div class="pills" style="margin-top:8px">${THEMES.map(
+                sw
+              ).join("")}</div>`
+            ) +
+            w(
+              `<h3>Location</h3><p class="mut">Used to work out accurate prayer times where you are.</p><button class="btn alt" data-a="loc">Allow location</button>`
+            );
+        if (s === 2)
+          b = w(
+            `<h3>Your week</h3><p class="mut">Tap the hours when you have school or sessions. Tap a day name to fill 8 AM–3 PM. Everything left empty counts as free time, and study reminders only come then.</p>${grid()}`
+          );
+        if (s === 3)
+          b = w(
+            `<h3>Study goals</h3><p class="mut">Add a subject and a daily time limit.</p>${goalForm()}`
+          );
+        return (
+          '<div class="ob"><h1>Sakina</h1><p class="mut">Step ' +
+          (s + 1) +
+          " of 4 · study, salah and calm in one place.</p>" +
+          b +
+          `<div class="row sp"><span>${
+            s ? '<button class="btn alt" data-a="back">Back</button>' : ""
+          }</span><button class="btn" data-a="next">${
+            s === 3 ? "Start" : "Next"
+          }</button></div></div>`
+        );
+      }
+      function today_() {
+        const nx = PT.findIndex((t) => t > new Date()),
+          ck = S.last === today(),
+          st = S.last === today() || S.last === yest() ? S.streak : 0;
+        return `<h2 style="margin:6px 4px 0">${greet()}</h2>${ramCard()}${modeCard()}<div class="surf row sp"><div><h2>🔥 ${st} day${
+          st === 1 ? "" : "s"
+        }</h2><p class="mut" style="margin:0">${
+          ck ? "Checked in today." : "Check in to grow your streak."
+        }</p></div><button class="btn" data-a="ck" ${ck ? "disabled" : ""}>${
+          ck ? "Checked in" : "Check in"
+        }</button></div>
+ <div class="surf"><h2>${
+   nx < 0 ? "All prayers passed" : "Next: " + PN[nx] + " at " + fmt(PT[nx])
+ }</h2><p class="mut" style="margin:4px 0 0">${S.cups} of ${S.goal} glasses · ${
+          PN.filter((p, i) => S.prayed[i]).length
+        } of 5 prayers ticked</p></div>
+ <div class="quick"><button data-a="cup"><span>💧</span><small>Water</small></button><button data-a="go" data-v="well"><span>🌬️</span><small>Breathe</small></button><button data-a="go" data-v="faith"><span>🕌</span><small>Prayers</small></button><button data-a="go" data-v="study"><span>📚</span><small>Focus</small></button></div>
+ <div class="surf"><p style="font:800 20px/1.35 'Bricolage Grotesque',sans-serif;margin:0 0 8px">“${esc(
+   Q[qi][0]
+ )}”</p><div class="row sp"><span class="mut">${
+          Q[qi][1]
+        }</span><button class="btn alt sm" data-a="nq">Another</button></div></div>${top3Card()}${fridayCard()}`;
+      }
+      function faith() {
+        const set = AZS[S.azs];
+        return `${duaCard()}${fridayCard()}<div class="surf"><h3>Prayers</h3><p class="mut">${
+          loc.ok
+            ? "Times for your location."
+            : "Allow location for accurate times."
+        } Tick a prayer and its reminders stop.</p>
+ ${PN.map(
+   (p, i) =>
+     `<div class="pr"><button class="chk ${
+       S.prayed[i] ? "on" : ""
+     }" data-a="pray" data-i="${i}" aria-label="${p} prayed">${
+       S.prayed[i] ? "✓" : ""
+     }</button><b style="flex:1">${
+       new Date().getDay() === 5 && i === 1 ? "Jumu’ah (Dhuhr)" : p
+     }</b><span class="mut">${PT[i] ? fmt(PT[i]) : ""}</span></div>`
+ ).join("")}</div>
+ <div class="surf"><h3>Azkar</h3><div class="pills" style="margin:10px 0">${Object.keys(
+   AZS
+ )
+   .map(
+     (k) =>
+       `<button class="pill ${
+         S.azs === k ? "on" : ""
+       }" data-a="azs" data-v="${k}">${AZS[k][0]}</button>`
+   )
+   .join("")}</div>
+ ${set[1]
+   .map((z, i) => {
+     const c = S.azkar[S.azs + i] || 0;
+     return `<div class="pr"><div style="flex:1"><div class="ar">${
+       z[2]
+     }</div><span class="mut">${z[0]}</span></div><button class="btn ${
+       c >= z[1] ? "" : "alt"
+     } sm" data-a="az" data-i="${i}">${c} / ${z[1]}</button></div>`;
+   })
+   .join("")}</div>${qiblaCard()}`;
+      }
+      function study() {
+        SLOTS = planTodos();
+        REV = planRev();
+        const fr = freeToday(),
+          dn = S.todos.filter((t) => t.d).length,
+          tt = pm.mode === "f" ? S.pomo.f : S.pomo.b;
+        return `<div class="surf"><h3>Pomodoro</h3><p class="mut" id="pl">${
+          pm.mode === "f" ? "Focus" : "Break"
+        }</p><div class="clock" id="pt">${mmss(
+          pm.left
+        )}</div><div class="bar"><i id="pbar" style="width:${
+          100 - (pm.left / (tt * 60)) * 100
+        }%"></i></div>
+ <div class="row" style="margin:14px 0"><button class="btn" data-a="pst">${
+   pm.run ? "Pause" : "Start"
+ }</button><button class="btn alt" data-a="prs">Reset</button><button class="btn alt" data-a="psk">Skip</button><span class="mut" style="margin-left:auto">${
+          pm.n
+        } done</span></div>
+ <div class="row"><label class="mut">Focus min<input id="pf" class="num" type="number" min="1" max="120" value="${
+   S.pomo.f
+ }"></label><label class="mut">Break min<input id="pb" class="num" type="number" min="1" max="60" value="${
+          S.pomo.b
+        }"></label></div><p class="mut" style="margin:12px 0 6px">Calm sounds (nature only, no music)</p><div class="pills">${[
+          ["rain", "Rain"],
+          ["waves", "Waves"],
+          ["wind", "Wind"],
+          ["birds", "Birds"],
+          ["", "Off"],
+        ]
+          .map(
+            ([k, l]) =>
+              `<button class="pill ${
+                snd === k ? "on" : ""
+              }" data-a="snd" data-v="${k}">${l}</button>`
+          )
+          .join("")}</div></div>
+ <div class="surf"><h3>To-do</h3><p class="mut">${dn} of ${
+          S.todos.length
+        } done</p>
+ ${S.todos
+   .map(
+     (t, i) =>
+       `<div class="pr"><button class="chk ${
+         t.d ? "on" : ""
+       }" data-a="td" data-i="${i}" aria-label="Mark done">${
+         t.d ? "✓" : ""
+       }</button><span style="flex:1" class="${t.d ? "dn" : ""}">${esc(
+         t.t
+       )}<br><small class="mut">${slotText(
+         i
+       )}</small></span><button class="btn alt sm" data-a="tdx" data-i="${i}" aria-label="Remove">✕</button></div>`
+   )
+   .join("")}
+ <div class="row" style="margin-top:10px"><input id="tdn" placeholder="Add a task"><button class="btn sm" data-a="tda">Add</button></div><div class="row" style="margin-top:8px"><select id="tdm" aria-label="How long">${[
+   15, 30, 45, 60, 90, 120,
+ ]
+   .map(
+     (m) =>
+       `<option value="${m}" ${m === 60 ? "selected" : ""}>${m} min</option>`
+   )
+   .join(
+     ""
+   )}</select><select id="tdd" aria-label="Which day"><option value="-1">Any day</option>${DAYS.map(
+          (d, k) => `<option value="${k}">${d}</option>`
+        ).join("")}</select></div></div>
+ ${examCard()}<div class="surf"><h3>Subjects</h3><p class="mut">${
+          fr.length
+            ? "Free today: " + fr.join(", ")
+            : "No free time marked for today."
+        }</p>${S.goals
+          .map(
+            (g, i) =>
+              `<div style="margin:12px 0"><div class="row sp"><b>${esc(
+                g.n
+              )}</b><span class="mut" id="gt${i}">${Math.floor(
+                (g.spent || 0) / 60
+              )} / ${
+                g.lim
+              } min</span></div><div class="bar" style="margin:6px 0"><i id="gb${i}" style="width:${Math.min(
+                100,
+                ((g.spent || 0) / (g.lim * 60)) * 100
+              )}%"></i></div><button class="btn sm ${
+                running === i ? "" : "alt"
+              }" data-a="run" data-i="${i}">${
+                running === i ? "Pause" : "Start"
+              }</button></div>`
+          )
+          .join("")}${goalForm()}</div>
+ <div class="surf"><h3>Weekly timetable</h3><p class="mut">Tap hours you’re busy. The rest is your free time.</p>${grid()}</div>`;
+      }
+      function well() {
+        const cups = Array.from(
+          { length: Math.max(S.goal, S.cups) },
+          (_, i) =>
+            `<button class="cup ${i < S.cups ? "on" : ""} ${
+              i >= S.goal ? "over" : ""
+            }" data-a="cupi" data-i="${i}" aria-label="Glass ${
+              i + 1
+            }"></button>`
+        ).join("");
+        return `<div class="surf"><h3>Water</h3><p class="mut">${S.cups} of ${
+          S.goal
+        } glasses. Tap a glass.</p><div class="cups" style="margin-top:10px">${cups}${
+          S.cups < 20
+            ? '<button class="cup" data-a="cup" aria-label="Add a glass" style="font-size:22px;color:var(--ink)">+</button>'
+            : ""
+        }</div>${
+          S.wm && S.cups > 0 ? `<p style="margin:12px 0 0">${S.wm}</p>` : ""
+        }</div>
+ <div class="surf"><h3>Breathe</h3><div class="pills" style="margin:10px 0">${[
+   "Box 4-4-4-4",
+   "4-7-8",
+   "Calm 5-5",
+ ]
+   .map(
+     (n, i) =>
+       `<button class="pill ${
+         (S.bp || 0) === i ? "on" : ""
+       }" data-a="bp" data-v="${i}">${n}</button>`
+   )
+   .join("")}</div>
+ <div class="pills">${[5, 10]
+   .map(
+     (m) =>
+       `<button class="pill ${
+         (S.bm || 5) === m ? "on" : ""
+       }" data-a="bm" data-v="${m}">${m} min</button>`
+   )
+   .join("")}</div>
+ <div class="orbwrap"><div class="orb" id="orb">Ready</div></div><div class="row sp"><span class="mut" id="brt"></span><button class="btn" data-a="bstart">${
+   br ? "Stop" : "Begin"
+ }</button></div></div>
+ <div class="surf"><h3>How are you really?</h3><div class="pills" style="margin-top:8px">${[
+   "😞",
+   "😕",
+   "😐",
+   "🙂",
+   "😄",
+ ]
+   .map(
+     (e, i) =>
+       `<button class="pill ${
+         S.mood === i ? "on" : ""
+       }" data-a="mood" data-v="${i}" style="font-size:22px">${e}</button>`
+   )
+   .join("")}</div><p class="mut">${
+          S.mood == null ? "One tap, no pressure." : S.mm || ""
+        }</p></div>${moodExtra()}`;
+      }
+      const Q = [
+        ["Small steps every day beat big plans someday.", ""],
+        ["You don’t have to be perfect. You just have to begin.", ""],
+        ["Tired is okay. Quitting is optional. Rest, then continue.", ""],
+        ["Your future self is watching. Make them proud today.", ""],
+        ["Focus on the next ten minutes, not the whole mountain.", ""],
+        [
+          "Discipline is choosing what you want most over what you want now.",
+          "",
+        ],
+        ["Progress is progress, even when it’s quiet.", ""],
+        ["Hard days build the strongest minds.", ""],
+        ["Indeed, with hardship comes ease.", "Qur’an 94:6 (meaning)"],
+        [
+          "Allah does not burden a soul beyond what it can bear.",
+          "Qur’an 2:286 (meaning)",
+        ],
+        [
+          "Whoever relies on Allah, He is enough for them.",
+          "Qur’an 65:3 (meaning)",
+        ],
+      ];
+      let qi = Math.floor(Date.now() / 864e5) % Q.length;
+      const MOOD = [
+        [
+          "That sounds really heavy. You don’t have to carry it all at once.",
+          "Rough day? Be gentle with yourself. A few slow breaths can help.",
+          "It’s okay not to be okay. Take it one small step at a time.",
+          "Thank you for being honest. Try a breathing round, then a glass of water.",
+        ],
+        [
+          "Not your best day, and that’s allowed. Tomorrow is a fresh page.",
+          "A little low? Stretch or step outside for two minutes.",
+          "Feeling off happens to everyone. Do one small thing that helps.",
+          "Be kind to yourself today. Rest counts as progress.",
+        ],
+        [
+          "Steady is good. Maybe some water or a short walk to lift it?",
+          "A calm in-between day. Pick one small win to aim for.",
+          "Neutral is fine. Quick check: have you had water today?",
+          "Not up, not down. A good time to focus on one task.",
+        ],
+        [
+          "Nice, keep that energy going! One focused session could feel great.",
+          "Glad you’re doing well. Share a smile with someone today.",
+          "Good vibes! Lock in one task while the mood is on your side.",
+          "Love that. Remember this feeling on harder days.",
+        ],
+        [
+          "Wonderful! Ride that wave and tackle something you’ve been putting off.",
+          "So glad to hear it. Gratitude makes good days last longer.",
+          "You’re shining today. Pass some of that positivity on.",
+          "Amazing! Celebrate a small win before the day ends.",
+        ],
+      ];
+      MSG.calm.push(
+        "Not everything needs fixing right now — just breathe.",
+        "Mental health check-in — how are you really feeling?",
+        "Breathing exercise time — take a moment to relax and focus on your breathing."
+      );
+      MSG.study.push(
+        "Lock-in mode — time to get things done.",
+        "Focus era activated — you’ve got this.",
+        "Stay focused — make the most of your homework time."
+      );
+      MSG.water.push(
+        "Hydration helps support learning — don’t forget your water!"
+      );
+      MSG.salah = MSG.salah.filter((x) => !x.startsWith("Time to reconnect"));
+      MSG.salah.push(
+        "Prayer time has arrived — may your prayer bring peace and blessings."
+      );
+      MSG.dhikr.push(
+        "Time to reconnect — don’t forget your Azkar.",
+        "Friendly reminder — take a moment to remember Allah through dhikr and supplication."
+      );
+      MSG.mood = [
+        "What’s the vibe today? — check in with yourself.",
+        "Be honest, how are you? — your feelings matter.",
+        "You good? — take a second to check in.",
+        "Small steps still count — progress is progress.",
+        "You made it through yesterday — keep going today.",
+      ];
+      let SLOTS = [];
+      function planTodos() {
+        const taken = (TK = {}),
+          n = new Date(),
+          out = [],
+          last = HRS[HRS.length - 1];
+        S.todos.forEach((t, i) => {
+          if (t.d) {
+            out[i] = "";
+            return;
+          }
+          const need = Math.max(1, Math.ceil((t.m || 60) / 60));
+          let found = "";
+          for (let k = 0; k < 7 && !found; k++) {
+            const d = (n.getDay() + k) % 7;
+            if (t.day >= 0 && t.day !== d) continue;
+            for (let h = HRS[0]; h <= last - need + 1 && !found; h++) {
+              if (k === 0 && h <= n.getHours()) continue;
+              let ok = true;
+              for (let j = 0; j < need; j++) {
+                if (S.busy[d + "_" + (h + j)] || taken[k + "_" + (h + j)]) {
+                  ok = false;
+                  break;
+                }
+              }
+              if (ok) {
+                for (let j = 0; j < need; j++) taken[k + "_" + (h + j)] = 1;
+                found =
+                  (k === 0 ? "Today" : k === 1 ? "Tomorrow" : DAYS[d]) +
+                  " " +
+                  hl(h);
+              }
+            }
+          }
+          out[i] = found
+            ? "Free slot: " + found + " · " + (t.m || 60) + " min"
+            : "No free slot found. Free up time in your timetable.";
+        });
+        return out;
+      }
+      const slotText = (i) => SLOTS[i] || "";
+      const RAD = Math.PI / 180;
+      const hrOpts = (v) =>
+        [...Array(24)]
+          .map(
+            (_, h) =>
+              `<option value="${h}" ${h === v ? "selected" : ""}>${hl(
+                h
+              )}</option>`
+          )
+          .join("");
+      const TH = [0, 10, 40, 90, 160, 260],
+        TN = [
+          "Seed",
+          "Sprout",
+          "Sapling",
+          "Young tree",
+          "Growing tree",
+          "Flowering tree",
+        ];
+      const CH = [
+        { n: "Pray all five prayers on 4 days", t: 4, f: (h) => h.p === 5 },
+        { n: "Reach your water goal on 5 days", t: 5, f: (h) => h.w >= S.goal },
+        { n: "Finish 10 focus sessions", t: 10, s: (h) => h.f || 0 },
+        { n: "Do your morning azkar on 5 days", t: 5, f: (h) => h.am },
+        { n: "Write 5 gratitude notes", t: 5, f: (h) => h.g },
+        { n: "Complete 12 tasks", t: 12, s: (h) => h.t || 0 },
+        { n: "Check in on 6 days", t: 6, f: (h) => h.ci },
+      ];
+      const DUA = [
+        [
+          "رَبِّ زِدْنِي عِلْمًا",
+          "My Lord, increase me in knowledge.",
+          "Qur’an 20:114 (meaning)",
+        ],
+        [
+          "رَبَّنَا آتِنَا فِي الدُّنْيَا حَسَنَةً وَفِي الْآخِرَةِ حَسَنَةً وَقِنَا عَذَابَ النَّارِ",
+          "Our Lord, give us good in this world and good in the Hereafter, and protect us from the Fire.",
+          "Qur’an 2:201 (meaning)",
+        ],
+        [
+          "حَسْبُنَا اللَّهُ وَنِعْمَ الْوَكِيلُ",
+          "Allah is enough for us, and He is the best protector.",
+          "Qur’an 3:173 (meaning)",
+        ],
+        [
+          "رَبِّ اشْرَحْ لِي صَدْرِي وَيَسِّرْ لِي أَمْرِي",
+          "My Lord, open my heart and make my task easy for me.",
+          "Qur’an 20:25-26 (meaning)",
+        ],
+        [
+          "اللَّهُمَّ إِنِّي أَسْأَلُكَ عِلْمًا نَافِعًا وَرِزْقًا طَيِّبًا وَعَمَلًا مُتَقَبَّلًا",
+          "O Allah, I ask You for useful knowledge, good provision and accepted deeds.",
+          "Morning dua, Sunan Ibn Majah",
+        ],
+      ];
+      const ACT = {
+        stretch: {
+          n: "2-minute stretch",
+          s: [
+            "Stand tall and roll your shoulders back 5 times.",
+            "Reach both arms up high and hold for 20 seconds.",
+            "Gently tilt your head to each side for 15 seconds.",
+            "Bend forward slowly and let your arms hang for 20 seconds.",
+            "Open your chest: hands behind your back, lift gently and breathe.",
+            "Shake out your hands and legs. Well done!",
+          ],
+        },
+        ground: {
+          n: "5 things you can see",
+          s: [
+            "Look around and name 5 things you can see.",
+            "Notice 4 things you can touch or feel.",
+            "Listen and name 3 things you can hear.",
+            "Find 2 things you can smell, or like the smell of.",
+            "Name 1 good thing about yourself. Breathe in slowly.",
+          ],
+        },
+        wind: {
+          n: "Wind down for sleep",
+          s: [
+            "Put your phone away or dim the screen.",
+            "Do your night azkar if you haven’t yet.",
+            "Take 5 slow breaths: in for 4, out for 6.",
+            "Think of one good thing from today.",
+            "Lights out. You did enough today.",
+          ],
+        },
+      };
+      let act = null,
+        as = 0,
+        snd = "",
+        TK = {},
+        REV = [],
+        AC = null,
+        SN = null;
+      const ik = (d) => {
+        d = d || new Date();
+        return (
+          d.getFullYear() +
+          "-" +
+          String(d.getMonth() + 1).padStart(2, "0") +
+          "-" +
+          String(d.getDate()).padStart(2, "0")
+        );
+      };
+      const azDone = (k) =>
+        AZS[k][1].every((z, i) => (S.azkar[k + i] || 0) >= z[1]);
+      function weekKeys(o) {
+        const a = [],
+          b = new Date();
+        b.setDate(b.getDate() - b.getDay() - 7 * (o || 0));
+        for (let i = 0; i < 7; i++) {
+          a.push(ik(b));
+          b.setDate(b.getDate() + 1);
+        }
+        return a;
+      }
+      const chWk = () =>
+        Math.floor(
+          (new Date() - new Date(new Date().getFullYear(), 0, 1)) / 6048e5
+        );
+      const chProg = (c, ks) =>
+        ks.reduce((s, k) => {
+          const h = S.hist[k];
+          return h ? s + (c.s ? c.s(h) : c.f(h) ? 1 : 0) : s;
+        }, 0);
+      function snap() {
+        const h = S.hist[ik()] || {};
+        Object.assign(h, {
+          p: Object.values(S.prayed).filter(Boolean).length,
+          w: S.cups,
+          f: S.fc,
+          t: S.tdn,
+          m: S.mood,
+          g: S.gr || "",
+          am: azDone("m") ? 1 : 0,
+          ae: azDone("e") ? 1 : 0,
+          ci: S.last === today() ? 1 : 0,
+        });
+        S.hist[ik()] = h;
+        const c = CH[chWk() % CH.length],
+          w = weekKeys()[0];
+        if (!S.chd[w] && chProg(c, weekKeys()) >= c.t) S.chd[w] = 1;
+      }
+      function pts() {
+        let t = 0;
+        Object.values(S.hist).forEach((h) => {
+          t +=
+            (h.p || 0) * 2 +
+            Math.min(h.w || 0, S.goal) +
+            (h.f || 0) * 3 +
+            (h.t || 0) * 2 +
+            (h.m != null ? 1 : 0) +
+            (h.g ? 2 : 0) +
+            (h.ci ? 2 : 0);
+        });
+        return t + Object.keys(S.chd).length * 15;
+      }
+      function tree(st) {
+        const X = 120,
+          gy = 190,
+          H = [0, 26, 52, 78, 98, 112][st],
+          top = gy - H,
+          w = [0, 0, 5, 9, 13, 16][st],
+          G = ["#2c7a3a", "#3f9d4f", "#6cc777"],
+          pk = (n) => Math.sin(n * 12.9898) * 0.5 + 0.5;
+        let s = `<svg viewBox="0 0 240 220" width="100%" height="235" role="img" aria-label="Your tree, stage ${
+          st + 1
+        } of 6"><defs><linearGradient id="tkg" x1="0" x2="1"><stop offset="0" stop-color="#6b4228"/><stop offset=".5" stop-color="#a0714a"/><stop offset="1" stop-color="#6b4228"/></linearGradient><radialGradient id="sng"><stop offset="0" style="stop-color:var(--a)" stop-opacity=".85"/><stop offset="1" style="stop-color:var(--a)" stop-opacity="0"/></radialGradient></defs>
+ <rect width="240" height="220" rx="24" style="fill:color-mix(in srgb,var(--p) 18%,var(--bg))"/><circle cx="198" cy="40" r="36" fill="url(#sng)"/><circle cx="198" cy="40" r="15" style="fill:var(--a)"/>`;
+        if (st >= 2)
+          s += `<g fill="#fff" opacity=".55"><ellipse cx="46" cy="44" rx="22" ry="8"/><ellipse cx="62" cy="38" rx="14" ry="8"/><ellipse cx="150" cy="26" rx="18" ry="6"/></g>`;
+        s += `<path d="M0 186 Q60 168 120 176 T240 178 V220 H0Z" fill="#58a04a"/><path d="M0 200 Q120 186 240 200 V220 H0Z" fill="#6b4a32"/><ellipse cx="${X}" cy="191" rx="${
+          26 + st * 9
+        }" ry="5" fill="#000" opacity=".18"/>`;
+        s += [26, 58, 90, 152, 186, 214]
+          .map(
+            (x) =>
+              `<path d="M${x} 190 l-3 -9 M${x} 190 l0 -12 M${x} 190 l3 -8" stroke="#3b7a38" stroke-width="2" stroke-linecap="round" fill="none"/>`
+          )
+          .join("");
+        if (st === 0)
+          s += `<circle class="twk" cx="${X}" cy="186" r="14" style="fill:var(--a)" opacity=".3"/><ellipse cx="${X}" cy="187" rx="6" ry="4" fill="#8a5a3c"/>`;
+        if (st === 1)
+          s += `<g class="sway"><path d="M${X} 190 Q${X - 3} ${190 - 14} ${
+            X + 2
+          } ${top}" stroke="#4f9d4a" stroke-width="3.5" fill="none" stroke-linecap="round"/><ellipse cx="${
+            X - 13
+          }" cy="${top + 2}" rx="13" ry="6.5" transform="rotate(-28 ${X - 13} ${
+            top + 2
+          })" fill="#5fbf6a"/><ellipse cx="${X + 14}" cy="${
+            top + 1
+          }" rx="13" ry="6.5" transform="rotate(28 ${X + 14} ${
+            top + 1
+          })" fill="#3f9d4f"/></g>`;
+        if (st >= 2) {
+          s += `<path d="M${X - w * 1.7} 192 Q${X - w} 188 ${
+            X - w * 0.55
+          } 178 L${X - w * 0.35} ${top} L${X + w * 0.35} ${top} L${
+            X + w * 0.55
+          } 178 Q${X + w} 188 ${X + w * 1.7} 192Z" fill="url(#tkg)"/>`;
+          if (st >= 3)
+            s += `<g stroke="url(#tkg)" stroke-linecap="round" fill="none"><path d="M${X} ${
+              gy - H * 0.45
+            } Q${X - 18} ${gy - H * 0.6} ${X - 34} ${top + 8}" stroke-width="${
+              w * 0.45
+            }"/><path d="M${X} ${gy - H * 0.5} Q${X + 18} ${gy - H * 0.65} ${
+              X + 34
+            } ${top + 6}" stroke-width="${w * 0.45}"/></g>`;
+          const C = [
+            null,
+            null,
+            [
+              [X, top - 4, 16],
+              [X - 14, top + 8, 13],
+              [X + 14, top + 8, 13],
+              [X, top + 10, 12],
+            ],
+            [
+              [X, top - 6, 26],
+              [X - 24, top + 10, 22],
+              [X + 24, top + 10, 22],
+              [X - 10, top - 18, 18],
+              [X + 12, top - 16, 18],
+              [X, top + 14, 20],
+            ],
+            [
+              [X, top - 14, 34],
+              [X - 34, top + 4, 28],
+              [X + 34, top + 4, 28],
+              [X - 18, top - 26, 24],
+              [X + 20, top - 24, 24],
+              [X - 46, top + 22, 20],
+              [X + 46, top + 22, 20],
+              [X, top + 12, 30],
+            ],
+            [
+              [X, top - 16, 36],
+              [X - 36, top + 4, 30],
+              [X + 36, top + 4, 30],
+              [X - 20, top - 28, 26],
+              [X + 22, top - 26, 26],
+              [X - 48, top + 22, 22],
+              [X + 48, top + 22, 22],
+              [X, top + 12, 32],
+              [X - 32, top - 14, 22],
+              [X + 34, top - 12, 22],
+            ],
+          ][st];
+          s +=
+            `<g class="sway">` +
+            C.map(
+              (c) =>
+                `<circle cx="${c[0]}" cy="${c[1] + 3}" r="${c[2] + 2}" fill="${
+                  G[0]
+                }"/>`
+            ).join("") +
+            C.map(
+              (c) =>
+                `<circle cx="${c[0]}" cy="${c[1]}" r="${c[2]}" fill="${G[1]}"/>`
+            ).join("") +
+            C.map(
+              (c) =>
+                `<circle cx="${c[0] - c[2] * 0.3}" cy="${
+                  c[1] - c[2] * 0.34
+                }" r="${c[2] * 0.5}" fill="${G[2]}" opacity=".75"/>`
+            ).join("");
+          if (st >= 4) {
+            const n = st === 5 ? 20 : 6;
+            for (let i = 0; i < n; i++) {
+              const x = X + Math.cos(i * 2.4) * (18 + (i % 5) * 9),
+                y = top - 6 + Math.sin(i * 1.7) * (14 + (i % 4) * 8);
+              s +=
+                st === 5
+                  ? `<g class="twk" style="animation-delay:${
+                      (i % 6) * 0.4
+                    }s"><circle cx="${x}" cy="${y}" r="4.5" fill="#ff9ec4"/><circle cx="${x}" cy="${y}" r="1.6" fill="#fff1a8"/></g>`
+                  : `<circle cx="${x}" cy="${y}" r="3" fill="#fff" opacity=".85"/>`;
+            }
+          }
+          s += `</g>`;
+          if (st === 5) {
+            for (let i = 0; i < 7; i++)
+              s += `<ellipse class="pet" cx="${X - 60 + i * 20}" cy="${
+                top + 24
+              }" rx="3.2" ry="1.9" fill="#ffb3d1" style="animation-delay:${
+                i * 1.05
+              }s"/>`;
+            s += [
+              [40, 90, 1],
+              [206, 100, 1.2],
+              [28, 140, 0.9],
+              [216, 150, 0.8],
+              [150, 32, 0.9],
+            ]
+              .map(
+                (p, i) =>
+                  `<path class="twk" style="fill:var(--a);animation-delay:${
+                    i * 0.5
+                  }s" d="M0 -6 L1.8 -1.8 L6 0 L1.8 1.8 L0 6 L-1.8 1.8 L-6 0 L-1.8 -1.8Z" transform="translate(${
+                    p[0]
+                  } ${p[1]}) scale(${p[2]})"/>`
+              )
+              .join("");
+          }
+        }
+        return s + "</svg>";
+      }
+      const rsBtn = () =>
+        `<div class="row" style="justify-content:flex-end;margin-top:10px"><button class="btn alt sm" data-a="rsch" ${
+          Object.keys(S.busy).length || rsConf ? "" : "disabled"
+        }>${
+          rsConf ? "Tap again to clear everything" : "Reset schedule"
+        }</button></div>`;
+      let rsConf = false;
+      function grewMsg(st) {
+        const g = S.tseen !== undefined && st > S.tseen;
+        S.tseen = st;
+        return g
+          ? '<p style="margin:6px 0;font-weight:600">Your tree grew to a new stage! 🎉</p>'
+          : "";
+      }
+      function review() {
+        const wk = weekKeys(),
+          pw = weekKeys(1),
+          P = pts(),
+          st = TH.reduce((s, t, i) => (P >= t ? i : s), 0),
+          nx = TH[st + 1],
+          c = CH[chWk() % CH.length],
+          pr = chProg(c, wk),
+          dn = S.chd[wk[0]];
+        const sum = (ks, f) => ks.reduce((s, k) => s + f(S.hist[k] || {}), 0),
+          row = (l, f) =>
+            `<div class="pr"><span style="flex:1">${l}</span><b>${sum(
+              wk,
+              f
+            )}</b><span class="mut" style="width:100px;text-align:right">last week ${sum(
+              pw,
+              f
+            )}</span></div>`;
+        const ms = wk.map((k) => (S.hist[k] || {}).m).filter((m) => m != null);
+        return `<div class="surf" style="text-align:center"><h3>Your tree: ${
+          TN[st]
+        }</h3>${grewMsg(st)}${tree(
+          st
+        )}<div class="bar" style="margin:8px 0"><i style="width:${
+          nx ? ((P - TH[st]) / (nx - TH[st])) * 100 : 100
+        }%"></i></div><p class="mut" style="margin:0">${
+          nx
+            ? nx -
+              P +
+              " more points to grow. Prayers, water, focus, tasks and check-ins all help."
+            : "Fully grown. Keep it blooming!"
+        }</p></div>
+ <div class="surf"><h3>This week’s challenge</h3><p style="margin:6px 0">${
+   c.n
+ }</p><div class="bar"><i style="width:${Math.min(
+          100,
+          (pr / c.t) * 100
+        )}%"></i></div><p class="mut" style="margin:6px 0 0">${Math.min(
+          pr,
+          c.t
+        )} of ${c.t}${dn ? " · Done! +15 points 🌟" : ""}</p></div>
+ <div class="surf"><h3>Weekly review</h3>${row(
+   "Prayers ticked",
+   (h) => h.p || 0
+ )}${row("Glasses of water", (h) => h.w || 0)}${row(
+          "Focus sessions",
+          (h) => h.f || 0
+        )}${row("Tasks done", (h) => h.t || 0)}${row(
+          "Check-ins",
+          (h) => h.ci || 0
+        )}${row("Gratitude notes", (h) =>
+          h.g ? 1 : 0
+        )}<p class="mut" style="margin:10px 0 0">${
+          ms.length
+            ? "Average mood: " +
+              ["😞", "😕", "😐", "🙂", "😄"][
+                Math.round(ms.reduce((a, b) => a + b, 0) / ms.length)
+              ]
+            : "No mood check-ins this week yet."
+        }</p></div>`;
+      }
+      function hijri(d) {
+        try {
+          const p = new Intl.DateTimeFormat("en-u-ca-islamic-umalqura", {
+              day: "numeric",
+              month: "numeric",
+            }).formatToParts(d || new Date()),
+            g = (t) => +p.find((x) => x.type === t).value;
+          return { d: g("day"), m: g("month") };
+        } catch (e) {
+          return null;
+        }
+      }
+      function ramadan() {
+        if (S.rtest) return { d: 12, left: 18 };
+        if (!S.ram) return null;
+        const h = hijri();
+        if (!h || h.m !== 9) return null;
+        let n = 0;
+        for (let i = 1; i <= 31; i++) {
+          const x = hijri(new Date(Date.now() + i * 864e5));
+          if (!x || x.m !== 9) break;
+          n++;
+        }
+        return { d: h.d, left: n };
+      }
+      function fastingNow() {
+        const r = ramadan(),
+          n = new Date();
+        return !!r && PT.length > 3 && n >= PT[0] && n < PT[3];
+      }
+      function tickExtra(n, h, mn, mins) {
+        if (
+          n.getDay() === 5 &&
+          S.kahf !== today() &&
+          [9, 15].includes(h) &&
+          mn < 2
+        )
+          once(
+            "k" + h,
+            "Jumu’ah Mubarak — don’t forget Surah al-Kahf today.",
+            "dhikr"
+          );
+        const wm = (S.bed * 60 - 30 + 1440) % 1440;
+        if (mins >= wm && mins < wm + 2)
+          once(
+            "wd",
+            "Wind-down time — put the screen away and take a few slow breaths.",
+            "wind"
+          );
+        if (PT.length > 3 && ramadan()) {
+          const f = (PT[0] - n) / 60000,
+            m = (PT[3] - n) / 60000;
+          if (f > 0 && f <= 45)
+            once(
+              "sr",
+              "Suhoor time — eat something and make your intention to fast.",
+              "salah"
+            );
+          if (m > 0 && m <= 10)
+            once(
+              "ir",
+              "Iftar is almost here — get ready and make dua.",
+              "salah"
+            );
+        }
+      }
+      function ramCard() {
+        const r = ramadan();
+        if (!r) {
+          if (!S.ram) return "";
+          const n = daysToRamadan();
+          return n
+            ? `<div class="surf"><h3>Ramadan 🌙</h3><p style="margin:4px 0 0">${n} day${
+                n === 1 ? "" : "s"
+              } until Ramadan</p></div>`
+            : "";
+        }
+        return `<div class="surf"><h3>Ramadan Mubarak 🌙</h3><p style="margin:4px 0">Day ${
+          r.d
+        } · ${r.left} day${
+          r.left === 1 ? "" : "s"
+        } left</p><p class="mut" style="margin:0">Suhoor ends ${
+          PT[0] ? fmt(PT[0]) : "--"
+        } · Iftar ${PT[3] ? fmt(PT[3]) : "--"}</p></div>`;
+      }
+      function top3Card() {
+        const d = S.top3.filter((t) => t.d).length;
+        return `<div class="surf"><h3>Top 3 today</h3><p class="mut">${d} of ${
+          S.top3.length || 3
+        } done</p>${S.top3
+          .map(
+            (t, i) =>
+              `<div class="pr"><button class="chk ${
+                t.d ? "on" : ""
+              }" data-a="tpd" data-i="${i}" aria-label="Done">${
+                t.d ? "✓" : ""
+              }</button><span style="flex:1" class="${t.d ? "dn" : ""}">${esc(
+                t.t
+              )}</span><button class="btn alt sm" data-a="tpx" data-i="${i}" aria-label="Remove">✕</button></div>`
+          )
+          .join("")}${
+          S.top3.length < 3
+            ? `<div class="row" style="margin-top:8px"><input id="tpn" placeholder="What matters most today?"><button class="btn sm" data-a="tpa">Add</button></div>`
+            : ""
+        }</div>`;
+      }
+      function fridayCard() {
+        if (new Date().getDay() !== 5) return "";
+        const k = S.kahf === today();
+        return `<div class="surf row sp"><div><h3>Jumu’ah Mubarak</h3><p class="mut" style="margin:0">Read Surah al-Kahf today.</p></div><button class="btn ${
+          k ? "" : "alt"
+        } sm" data-a="kh">${k ? "Done ✓" : "Mark read"}</button></div>`;
+      }
+      function duaCard() {
+        const d = DUA[Math.floor(Date.now() / 864e5) % DUA.length];
+        return `<div class="surf"><h3>Dua of the day</h3><div class="ar">${d[0]}</div><p style="margin:4px 0">${d[1]}</p><p class="mut" style="margin:0">${d[2]}</p></div>`;
+      }
+      function qb() {
+        if (!loc.ok) return null;
+        const l = loc.lat * RAD,
+          dl = (39.8262 - loc.lng) * RAD,
+          k = 21.4225 * RAD;
+        return (
+          (Math.atan2(
+            Math.sin(dl) * Math.cos(k),
+            Math.cos(l) * Math.sin(k) - Math.sin(l) * Math.cos(k) * Math.cos(dl)
+          ) /
+            RAD +
+            360) %
+          360
+        );
+      }
+      function qiblaCard() {
+        const b = qb();
+        return `<div class="surf" style="text-align:center"><h3>Qibla</h3>${
+          b == null
+            ? '<p class="mut">Allow location in Settings to find the Qibla direction.</p>'
+            : `<div style="width:150px;height:150px;border-radius:50%;border:2px solid var(--p);margin:12px auto;display:grid;place-items:center;position:relative"><span style="position:absolute;top:2px;font-size:12px;opacity:.7">N</span><div id="qa" style="font:800 70px/1 'Bricolage Grotesque';color:var(--a);transition:transform .2s;transform:rotate(${b}deg)">↑</div></div><p class="mut" style="margin:0">Qibla is ${Math.round(
+                b
+              )}° clockwise from north.</p><button class="btn alt sm" style="margin-top:10px" data-a="qs">Use my phone’s compass</button><p class="mut" style="margin:10px 0 0">A guide only. Phone compasses can be off by a few degrees, so double-check with a compass or your mosque.</p>`
+        }</div>`;
+      }
+      function qstart() {
+        const on = (e) => {
+          const h =
+            e.webkitCompassHeading != null
+              ? e.webkitCompassHeading
+              : e.absolute && e.alpha != null
+              ? 360 - e.alpha
+              : null;
+          if (h == null) return;
+          const b = qb(),
+            a = $("#qa");
+          if (a && b != null) a.style.transform = "rotate(" + (b - h) + "deg)";
+        };
+        const go = () => {
+          addEventListener("deviceorientationabsolute", on, true);
+          addEventListener("deviceorientation", on, true);
+        };
+        try {
+          if (
+            typeof DeviceOrientationEvent !== "undefined" &&
+            typeof DeviceOrientationEvent.requestPermission === "function"
+          )
+            DeviceOrientationEvent.requestPermission()
+              .then((r) => {
+                if (r === "granted") go();
+              })
+              .catch(() => {});
+          else go();
+        } catch (x) {}
+      }
+      function planRev() {
+        const out = [],
+          n = new Date(),
+          d0 = new Date();
+        d0.setHours(0, 0, 0, 0);
+        S.exams.forEach((e, i) => {
+          const days = Math.round((new Date(e.date + "T00:00") - d0) / 864e5);
+          if (isNaN(days) || days < 0) {
+            out[i] = "Date has passed.";
+            return;
+          }
+          if (days === 0) {
+            out[i] = "Exam is today. Good luck!";
+            return;
+          }
+          const per = Math.max(15, Math.ceil((e.h * 60) / days / 15) * 15),
+            need = Math.ceil(per / 60);
+          let f = "";
+          for (
+            let h = Math.max(HRS[0], n.getHours() + 1);
+            h <= HRS[HRS.length - 1] - need + 1 && !f;
+            h++
+          ) {
+            let ok = true;
+            for (let j = 0; j < need; j++)
+              if (S.busy[n.getDay() + "_" + (h + j)] || TK["0_" + (h + j)])
+                ok = false;
+            if (ok) {
+              for (let j = 0; j < need; j++) TK["0_" + (h + j)] = 1;
+              f = hl(h);
+            }
+          }
+          out[i] =
+            days +
+            " day" +
+            (days === 1 ? "" : "s") +
+            " left · revise about " +
+            per +
+            " min a day. " +
+            (f ? "Today’s slot: " + f : "No free slot left today.");
+        });
+        return out;
+      }
+      function examCard() {
+        const ex = S.exams
+          .map((e, i) => ({ ...e, i }))
+          .sort((a, b) => (a.date < b.date ? -1 : 1));
+        return `<div class="surf"><h3>Exam countdown</h3>${ex
+          .map(
+            (e) =>
+              `<div class="pr"><div style="flex:1"><b>${esc(
+                e.n
+              )}</b><br><small class="mut">${
+                REV[e.i] || ""
+              }</small></div><button class="btn alt sm" data-a="exx" data-i="${
+                e.i
+              }" aria-label="Remove">✕</button></div>`
+          )
+          .join(
+            ""
+          )}<div class="row" style="margin-top:10px"><input id="exn" placeholder="Exam, e.g. Science"><button class="btn sm" data-a="exa">Add</button></div><div class="row" style="margin-top:8px"><input id="exd" type="date" aria-label="Exam date"><input id="exh" class="num" type="number" min="1" max="100" value="8" aria-label="Revision hours"><span class="mut">hrs revision</span></div></div>`;
+      }
+      function mkNoise() {
+        const len = AC.sampleRate * 4,
+          buf = AC.createBuffer(1, len, AC.sampleRate),
+          d = buf.getChannelData(0);
+        let b0 = 0,
+          b1 = 0,
+          b2 = 0,
+          b3 = 0,
+          b4 = 0,
+          b5 = 0,
+          b6 = 0;
+        for (let i = 0; i < len; i++) {
+          const w = Math.random() * 2 - 1;
+          b0 = 0.99886 * b0 + w * 0.0555179;
+          b1 = 0.99332 * b1 + w * 0.0750759;
+          b2 = 0.969 * b2 + w * 0.153852;
+          b3 = 0.8665 * b3 + w * 0.3104856;
+          b4 = 0.55 * b4 + w * 0.5329522;
+          b5 = -0.7616 * b5 - w * 0.016898;
+          d[i] = (b0 + b1 + b2 + b3 + b4 + b5 + b6 + w * 0.5362) * 0.16;
+          b6 = w * 0.115926;
+        }
+        const s = AC.createBufferSource();
+        s.buffer = buf;
+        s.loop = true;
+        s.start();
+        return s;
+      }
+      function sound(k) {
+        if (SN) {
+          SN.stop();
+          SN = null;
+        }
+        if (!k) return;
+        try {
+          AC = AC || new (window.AudioContext || window.webkitAudioContext)();
+          if (AC.resume) AC.resume().catch(() => {});
+          let dead = false;
+          const nodes = [],
+            out = AC.createGain(),
+            comp = AC.createDynamicsCompressor();
+          out.gain.value = 0;
+          out.connect(comp);
+          comp.connect(AC.destination);
+          out.gain.linearRampToValueAtTime(0.8, AC.currentTime + 1.5);
+          const bq = (t, f, q) => {
+              const x = AC.createBiquadFilter();
+              x.type = t;
+              x.frequency.value = f;
+              if (q) x.Q.value = q;
+              return x;
+            },
+            gn = (v) => {
+              const x = AC.createGain();
+              x.gain.value = v;
+              return x;
+            },
+            noise = () => {
+              const x = mkNoise();
+              nodes.push(x);
+              return x;
+            },
+            chain = (...n) => {
+              for (let i = 0; i < n.length - 1; i++) n[i].connect(n[i + 1]);
+              return n[n.length - 1];
+            },
+            loop = (fn, a, b) => {
+              const run = () => {
+                if (dead) return;
+                fn();
+                setTimeout(run, a + Math.random() * (b - a));
+              };
+              run();
+            },
+            pan = (n, p) => {
+              if (AC.createStereoPanner) {
+                const x = AC.createStereoPanner();
+                x.pan.value = p;
+                n.connect(x);
+                x.connect(out);
+              } else n.connect(out);
+            };
+          if (k === "rain") {
+            chain(
+              noise(),
+              bq("highpass", 900),
+              bq("lowpass", 9000),
+              gn(0.9),
+              out
+            );
+            chain(noise(), bq("bandpass", 2600, 0.5), gn(0.35), out);
+            chain(noise(), bq("lowpass", 220), gn(0.5), out);
+            loop(
+              () => {
+                const t = AC.currentTime,
+                  f = 1500 + Math.random() * 2800,
+                  o = AC.createOscillator(),
+                  g = gn(0.0001);
+                o.frequency.setValueAtTime(f, t);
+                o.frequency.exponentialRampToValueAtTime(f * 0.55, t + 0.05);
+                g.gain.linearRampToValueAtTime(
+                  0.015 + Math.random() * 0.025,
+                  t + 0.004
+                );
+                g.gain.exponentialRampToValueAtTime(0.0001, t + 0.07);
+                o.connect(g);
+                pan(g, Math.random() * 1.6 - 0.8);
+                o.start(t);
+                o.stop(t + 0.09);
+              },
+              120,
+              600
+            );
+          } else if (k === "waves") {
+            const gR = gn(0.1),
+              gF = gn(0.03),
+              bpF = bq("bandpass", 900, 0.35);
+            chain(noise(), bq("lowpass", 420), gR, out);
+            chain(noise(), bpF, gF, out);
+            chain(noise(), bq("highpass", 3000), gn(0.04), out);
+            loop(
+              () => {
+                const t = AC.currentTime,
+                  rise = 3.5 + Math.random() * 2,
+                  fall = 4 + Math.random() * 3,
+                  pk = 0.7 + Math.random() * 0.5;
+                gF.gain.cancelScheduledValues(t);
+                gF.gain.setValueAtTime(0.03, t);
+                gF.gain.linearRampToValueAtTime(pk, t + rise);
+                gF.gain.exponentialRampToValueAtTime(0.03, t + rise + fall);
+                bpF.frequency.cancelScheduledValues(t);
+                bpF.frequency.setValueAtTime(700, t);
+                bpF.frequency.linearRampToValueAtTime(2400, t + rise);
+                bpF.frequency.linearRampToValueAtTime(900, t + rise + fall);
+                gR.gain.cancelScheduledValues(t);
+                gR.gain.setValueAtTime(0.1, t);
+                gR.gain.linearRampToValueAtTime(0.8, t + rise);
+                gR.gain.exponentialRampToValueAtTime(0.1, t + rise + fall);
+              },
+              7500,
+              10500
+            );
+          } else if (k === "wind") {
+            const bp = bq("bandpass", 420, 0.8),
+              g = gn(0.2);
+            let lf = 420,
+              lg = 0.2;
+            chain(noise(), bp, g, out);
+            chain(noise(), bq("lowpass", 180), gn(0.5), out);
+            loop(
+              () => {
+                const t = AC.currentTime,
+                  d = 3.5 + Math.random() * 4,
+                  f = 250 + Math.random() * 700,
+                  pk = 0.9 + Math.random() * 0.7;
+                bp.frequency.cancelScheduledValues(t);
+                bp.frequency.setValueAtTime(lf, t);
+                bp.frequency.linearRampToValueAtTime(f, t + d * 0.5);
+                bp.frequency.linearRampToValueAtTime(320, t + d);
+                g.gain.cancelScheduledValues(t);
+                g.gain.setValueAtTime(lg, t);
+                g.gain.linearRampToValueAtTime(pk, t + d * 0.5);
+                g.gain.linearRampToValueAtTime(0.2, t + d);
+                lf = 320;
+                lg = 0.2;
+              },
+              3500,
+              7000
+            );
+          } else {
+            chain(noise(), bq("lowpass", 1200), gn(0.08), out);
+            const note = (f0, f1, d, t, v, p, far) => {
+              const o = AC.createOscillator(),
+                g = gn(0.0001);
+              o.frequency.setValueAtTime(f0, t);
+              o.frequency.exponentialRampToValueAtTime(f1, t + d);
+              g.gain.linearRampToValueAtTime(v, t + d * 0.15);
+              g.gain.exponentialRampToValueAtTime(0.0001, t + d);
+              o.connect(g);
+              let n = g;
+              if (far) {
+                n = bq("lowpass", 2600);
+                g.connect(n);
+              }
+              pan(n, p);
+              o.start(t);
+              o.stop(t + d + 0.05);
+            };
+            const bird = () => {
+              const t = AC.currentTime + 0.02,
+                p = Math.random() * 1.6 - 0.8,
+                far = Math.random() < 0.4,
+                v = far ? 0.25 : 0.5,
+                ty = Math.floor(Math.random() * 3),
+                b = 2600 + Math.random() * 2200;
+              if (ty === 0) {
+                const n = 2 + Math.floor(Math.random() * 3);
+                for (let i = 0; i < n; i++)
+                  note(
+                    b,
+                    b * (1.25 + Math.random() * 0.3),
+                    0.09,
+                    t + i * 0.14,
+                    v,
+                    p,
+                    far
+                  );
+              } else if (ty === 1) {
+                note(b * 1.3, b * 0.8, 0.16, t, v, p, far);
+                note(b * 0.85, b * 1.2, 0.12, t + 0.2, v, p, far);
+              } else {
+                const n = 6 + Math.floor(Math.random() * 6);
+                for (let i = 0; i < n; i++)
+                  note(
+                    b * (1 + 0.05 * Math.sin(i)),
+                    b * (1.1 + 0.05 * Math.cos(i)),
+                    0.045,
+                    t + i * 0.06,
+                    v * 0.8,
+                    p,
+                    far
+                  );
+              }
+            };
+            loop(
+              () => {
+                bird();
+                if (Math.random() < 0.35)
+                  setTimeout(() => {
+                    if (!dead) bird();
+                  }, 400 + Math.random() * 500);
+              },
+              1300,
+              4200
+            );
+          }
+          SN = {
+            stop() {
+              dead = true;
+              const t = AC.currentTime;
+              out.gain.cancelScheduledValues(t);
+              out.gain.setValueAtTime(out.gain.value, t);
+              out.gain.linearRampToValueAtTime(0, t + 0.4);
+              setTimeout(
+                () =>
+                  nodes.forEach((n) => {
+                    try {
+                      n.stop();
+                    } catch (e) {}
+                  }),
+                600
+              );
+            },
+          };
+        } catch (e) {
+          console.warn("sound", e);
+        }
+      }
+      function actCard() {
+        if (act) {
+          const a = ACT[act],
+            last = as === a.s.length - 1;
+          return `<div class="surf"><h3>${a.n}</h3><p class="mut">Step ${
+            as + 1
+          } of ${a.s.length}</p><p style="font-size:18px;margin:12px 0">${
+            a.s[as]
+          }</p><div class="row sp"><button class="btn alt sm" data-a="abk">Back</button><button class="btn" data-a="anx">${
+            last ? "Finish" : "Next"
+          }</button></div></div>`;
+        }
+        return `<div class="surf"><h3>Quick resets</h3><div class="pills" style="margin-top:8px">${Object.keys(
+          ACT
+        )
+          .map(
+            (k) =>
+              `<button class="pill" data-a="act" data-v="${k}">${ACT[k].n}</button>`
+          )
+          .join("")}</div></div>`;
+      }
+      function moodExtra() {
+        const em = ["😞", "😕", "😐", "🙂", "😄"],
+          days = [...Array(7)].map((_, i) => {
+            const d = new Date();
+            d.setDate(d.getDate() - 6 + i);
+            return [ik(d), DAYS[d.getDay()]];
+          });
+        const hist = days
+          .map(([k, l]) => {
+            const m = (S.hist[k] || {}).m;
+            return `<div style="text-align:center;flex:1"><div style="font-size:22px">${
+              m == null ? "·" : em[m]
+            }</div><small class="mut">${l}</small></div>`;
+          })
+          .join("");
+        const ms = Object.values(S.hist).filter((h) => h.m != null),
+          av = (a) => a.reduce((s, h) => s + h.m, 0) / a.length;
+        let ins =
+          "Keep checking in. After a few days I’ll show what lifts your mood.";
+        const A = ms.filter((h) => h.w >= S.goal),
+          B = ms.filter((h) => h.w < S.goal),
+          F = ms.filter((h) => h.f > 0),
+          G = ms.filter((h) => !h.f);
+        if (A.length >= 3 && B.length >= 3)
+          ins =
+            "Your mood averages " +
+            av(A).toFixed(1) +
+            " on days you reach your water goal and " +
+            av(B).toFixed(1) +
+            " on other days (out of 4).";
+        else if (F.length >= 3 && G.length >= 3)
+          ins =
+            "Your mood averages " +
+            av(F).toFixed(1) +
+            " on days with a focus session and " +
+            av(G).toFixed(1) +
+            " on other days (out of 4).";
+        const low = [0, 1, 2].every((i) => {
+          const d = new Date();
+          d.setDate(d.getDate() - i);
+          const m = (S.hist[ik(d)] || {}).m;
+          return m != null && m <= 1;
+        });
+        const notes = Object.keys(S.hist)
+          .filter((k) => S.hist[k].g)
+          .sort()
+          .reverse()
+          .slice(0, 4);
+        return (
+          (low
+            ? `<div class="surf"><h3>Thinking of you 💛</h3><p>You’ve had a few heavy days in a row. Talking to a parent, teacher or someone you trust can really help. You don’t have to carry it alone. If you ever feel unsafe, tell a trusted adult right away.</p></div>`
+            : "") +
+          `<div class="surf"><h3>Your week</h3><div class="row" style="margin:8px 0">${hist}</div><p class="mut" style="margin:0">${ins}</p></div><div class="surf"><h3>One good thing today</h3><div class="row"><input id="gri" placeholder="Something you’re grateful for" value="${esc(
+            S.gr || ""
+          )}"><button class="btn sm" data-a="gsv">Save</button></div>${notes
+            .map(
+              (k) =>
+                `<p class="mut" style="margin:8px 0">${k.slice(5)} · ${esc(
+                  S.hist[k].g
+                )}</p>`
+            )
+            .join("")}</div>` +
+          actCard()
+        );
+      }
+      const AR = {
+        Today: "اليوم",
+        Faith: "الإيمان",
+        Study: "الدراسة",
+        Wellbeing: "العافية",
+        Review: "المراجعة",
+        Sakina: "سكينة",
+        "Choose theme": "اختر الألوان",
+        Settings: "الإعدادات",
+        Done: "تم",
+        "About you": "عنك",
+        "Your name": "اسمك",
+        Male: "ذكر",
+        Female: "أنثى",
+        "Your water": "شرب الماء",
+        "How many glasses do you usually drink in a day?":
+          "كم كوباً تشرب عادةً في اليوم؟",
+        "e.g. 4": "مثلاً 4",
+        "And your daily goal?": "وما هدفك اليومي؟",
+        "Do you pray on time?": "هل تصلي في وقتها؟",
+        yes: "نعم",
+        sometimes: "أحياناً",
+        "not yet": "ليس بعد",
+        "Pick your colours": "اختر ألوانك",
+        Location: "الموقع",
+        "Used to work out accurate prayer times where you are.":
+          "لحساب مواقيت الصلاة بدقة حسب مكانك.",
+        "Allow location": "السماح بالموقع",
+        "Your week": "أسبوعك",
+        "Tap the hours when you have school or sessions. Tap a day name to fill 8 AM–3 PM. Everything left empty counts as free time, and study reminders only come then.":
+          "اضغط على الساعات التي تكون فيها في المدرسة أو في حصص. اضغط على اسم اليوم لتعبئة من 8 ص إلى 3 م. كل ما يبقى فارغاً يُعدّ وقت فراغ، وتذكيرات المذاكرة تأتي فيه فقط.",
+        "Study goals": "أهداف الدراسة",
+        "Add a subject and a daily time limit.":
+          "أضف مادة وحداً زمنياً يومياً.",
+        "Subject, e.g. Maths": "المادة، مثلاً الرياضيات",
+        "Daily minutes": "الدقائق اليومية",
+        Add: "إضافة",
+        Remove: "حذف",
+        Back: "رجوع",
+        Next: "التالي",
+        Start: "ابدأ",
+        Pause: "إيقاف مؤقت",
+        Reset: "إعادة",
+        Skip: "تخطي",
+        "Checked in today.": "سجّلت حضورك اليوم.",
+        "Check in to grow your streak.": "سجّل حضورك لتزيد سلسلتك.",
+        "Checked in": "تم التسجيل",
+        "Check in": "سجّل حضورك",
+        "All prayers passed": "انتهت صلوات اليوم",
+        Water: "الماء",
+        Breathe: "تنفّس",
+        Prayers: "الصلوات",
+        Focus: "التركيز",
+        Another: "أخرى",
+        "Top 3 today": "أهم 3 اليوم",
+        "What matters most today?": "ما أهم شيء اليوم؟",
+        "Mark done": "تحديد كمنجز",
+        "Done ✓": "تم ✓",
+        "Jumu’ah Mubarak": "جمعة مباركة",
+        "Read Surah al-Kahf today.": "اقرأ سورة الكهف اليوم.",
+        "Mark read": "تمت القراءة",
+        "Ramadan Mubarak 🌙": "رمضان مبارك 🌙",
+        "Glasses you usually drink a day": "عدد الأكواب التي تشربها يومياً",
+        "Daily goal (glasses)": "الهدف اليومي (أكواب)",
+        Colours: "الألوان",
+        Notifications: "الإشعارات",
+        "Reminders when the app is closed": "تذكيرات عند إغلاق التطبيق",
+        On: "مفعّل",
+        Muted: "مكتوم",
+        "Using your location for prayer times.":
+          "يُستخدم موقعك لمواقيت الصلاة.",
+        "Used for accurate prayer times.": "لمواقيت صلاة دقيقة.",
+        "Update location": "تحديث الموقع",
+        "Timetable and subjects": "الجدول والمواد",
+        "Edit in Study": "تعديل في الدراسة",
+        Reminders: "التذكيرات",
+        "Quiet hours (only prayer reminders come through)":
+          "ساعات الهدوء (تصل تذكيرات الصلاة فقط)",
+        "Quiet from": "الهدوء من",
+        "Quiet until": "الهدوء حتى",
+        to: "إلى",
+        "Bedtime (wind-down reminder 30 minutes before)":
+          "وقت النوم (تذكير للاسترخاء قبله بـ 30 دقيقة)",
+        Bedtime: "وقت النوم",
+        "At most 6 reminders a day, at least 45 minutes apart, and fewer of the kinds you ignore.":
+          "6 تذكيرات كحد أقصى يومياً، بينها 45 دقيقة على الأقل، ويقلّ ما تتجاهله.",
+        Ramadan: "رمضان",
+        "Preview Ramadan mode": "معاينة وضع رمضان",
+        Off: "إيقاف",
+        Setup: "الإعداد",
+        "See the welcome questions again. Your answers stay filled in.":
+          "شاهد أسئلة الترحيب مرة أخرى. تبقى إجاباتك كما هي.",
+        "Run setup again": "إعادة الإعداد",
+        Modes: "الأوضاع",
+        Normal: "عادي",
+        "Exam mode": "وضع الامتحانات",
+        "Holiday mode": "وضع الإجازة",
+        "Exam mode: only prayer, wind-down and revision reminders. Holiday mode: study reminders pause.":
+          "وضع الامتحانات: تذكيرات الصلاة والاسترخاء والمراجعة فقط. وضع الإجازة: تتوقف تذكيرات الدراسة.",
+        "Exam mode is on": "وضع الامتحانات مفعّل",
+        "Holiday mode is on": "وضع الإجازة مفعّل",
+        "Study reminders are paused. Enjoy your break!":
+          "تذكيرات الدراسة متوقفة. استمتع بإجازتك!",
+        "Widgets and shortcuts": "الأدوات والاختصارات",
+        "Real home-screen widgets and lock-screen shortcuts come with the phone app. For now, add the app to your home screen using a link that ends with one of these words:":
+          "أدوات الشاشة الرئيسية وااختصارات شاشة القفل الحقيقية تأتي مع تطبيق الهاتف. حالياً، أضف التطبيق إلى شاشتك الرئيسية برابط ينتهي بإحدى هذه الكلمات:",
+        "adds a glass": "يضيف كوباً",
+        "opens prayers": "يفتح الصلوات",
+        "starts breathing": "يبدأ التنفس",
+        "starts the timer": "يبدأ المؤقت",
+        "Backup and transfer": "النسخ الاحتياطي والنقل",
+        "Move your data to another phone: copy the code, then paste it there. This is a manual backup, not automatic sync.":
+          "انقل بياناتك إلى هاتف آخر: انسخ الرمز ثم الصقه هناك. هذا نسخ احتياطي يدوي وليس مزامنة تلقائية.",
+        "Show backup code": "إظهار رمز النسخ",
+        "Hide backup code": "إخفاء رمز النسخ",
+        "Restore from a code": "استعادة من رمز",
+        "Paste your backup code here": "الصق رمز النسخ هنا",
+        Restore: "استعادة",
+        "Backup restored.": "تمت الاستعادة.",
+        "That code didn’t work.": "هذا الرمز لا يعمل.",
+        "Dua of the day": "دعاء اليوم",
+        "Times for your location. Tick a prayer and its reminders stop.":
+          "مواقيت موقعك. علّم الصلاة وتتوقف تذكيراتها.",
+        "Allow location for accurate times. Tick a prayer and its reminders stop.":
+          "اسمح بالموقع لمواقيت دقيقة. علّم الصلاة وتتوقف تذكيراتها.",
+        Fajr: "الفجر",
+        Dhuhr: "الظهر",
+        Asr: "العصر",
+        Maghrib: "المغرب",
+        Isha: "العشاء",
+        "Jumu’ah (Dhuhr)": "الجمعة (الظهر)",
+        Azkar: "الأذكار",
+        Morning: "الصباح",
+        Evening: "المساء",
+        Night: "النوم",
+        "After prayer": "بعد الصلاة",
+        "Morning praise": "حمد الصباح",
+        "Dawn dua": "دعاء الصباح",
+        Protection: "التحصين",
+        Contentment: "الرضا",
+        Reliance: "التوكل",
+        Glorify: "التسبيح",
+        "The three Quls": "المعوذات",
+        "Evening praise": "حمد المساء",
+        "Dusk dua": "دعاء المساء",
+        Refuge: "الاستعاذة",
+        "Before sleep": "قبل النوم",
+        Tasbih: "تسبيح",
+        Tahmid: "تحميد",
+        Takbir: "تكبير",
+        SubhanAllah: "سبحان الله",
+        Alhamdulillah: "الحمد لله",
+        "Allahu Akbar": "الله أكبر",
+        Astaghfirullah: "أستغفر الله",
+        "My Lord, increase me in knowledge.": "ربّ زدني علماً.",
+        "Our Lord, give us good in this world and good in the Hereafter, and protect us from the Fire.":
+          "ربنا آتنا في الدنيا حسنة وفي الآخرة حسنة وقنا عذاب النار.",
+        "Allah is enough for us, and He is the best protector.":
+          "حسبنا الله ونعم الوكيل.",
+        "My Lord, open my heart and make my task easy for me.":
+          "ربّ اشرح لي صدري ويسّر لي أمري.",
+        "O Allah, I ask You for useful knowledge, good provision and accepted deeds.":
+          "اللهم إني أسألك علماً نافعاً ورزقاً طيباً وعملاً متقبلاً.",
+        "Morning dua, Sunan Ibn Majah": "دعاء الصباح، سنن ابن ماجه",
+        Qibla: "القبلة",
+        "Allow location in Settings to find the Qibla direction.":
+          "اسمح بالموقع من الإعدادات لمعرفة اتجاه القبلة.",
+        "Use my phone’s compass": "استخدم بوصلة هاتفي",
+        "A guide only. Phone compasses can be off by a few degrees, so double-check with a compass or your mosque.":
+          "للإرشاد فقط. قد تنحرف بوصلة الهاتف بضع درجات، فتأكد ببوصلة أو من المسجد.",
+        Pomodoro: "بومودورو",
+        Break: "استراحة",
+        "Focus min": "دقائق التركيز",
+        "Break min": "دقائق الاستراحة",
+        "Calm sounds (nature only, no music)":
+          "أصوات هادئة (طبيعة فقط، بدون موسيقى)",
+        Rain: "مطر",
+        Waves: "أمواج",
+        Wind: "رياح",
+        "Deep calm": "هدوء عميق",
+        "To-do": "المهام",
+        "Add a task": "أضف مهمة",
+        "How long": "المدة",
+        "Which day": "اليوم",
+        "Any day": "أي يوم",
+        "Exam countdown": "العدّ التنازلي للامتحان",
+        "Exam, e.g. Science": "الامتحان، مثلاً العلوم",
+        "Exam date": "تاريخ الامتحان",
+        "Revision hours": "ساعات المراجعة",
+        "hrs revision": "ساعة مراجعة",
+        "Date has passed.": "مضى الموعد.",
+        "Exam is today. Good luck!": "الامتحان اليوم. بالتوفيق!",
+        "No free slot found. Free up time in your timetable.":
+          "لا يوجد وقت متاح. أفرغ وقتاً في جدولك.",
+        Subjects: "المواد",
+        "No free time marked for today.": "لا يوجد وقت فراغ اليوم.",
+        "Weekly timetable": "الجدول الأسبوعي",
+        "Tap hours you’re busy. The rest is your free time.":
+          "اضغط على الساعات التي تكون مشغولاً فيها. الباقي وقت فراغك.",
+        "Box 4-4-4-4": "تنفس مربّع 4-4-4-4",
+        "Calm 5-5": "هدوء 5-5",
+        Ready: "جاهز",
+        "Breathe in": "شهيق",
+        Hold: "احبس",
+        "Breathe out": "زفير",
+        Begin: "ابدأ",
+        Stop: "إيقاف",
+        "How are you really?": "كيف حالك فعلاً؟",
+        "One tap, no pressure.": "لمسة واحدة، بلا ضغط.",
+        "Thinking of you 💛": "أفكر بك 💛",
+        "You’ve had a few heavy days in a row. Talking to a parent, teacher or someone you trust can really help. You don’t have to carry it alone. If you ever feel unsafe, tell a trusted adult right away.":
+          "مررت بأيام ثقيلة متتالية. الحديث مع أحد الوالدين أو معلم أو شخص تثق به قد يفيدك كثيراً. لا يجب أن تحمل الأمر وحدك. وإن شعرت يوماً بعدم الأمان، أخبر شخصاً بالغاً تثق به فوراً.",
+        "One good thing today": "شيء جميل واحد اليوم",
+        "Something you’re grateful for": "شيء أنت ممتن له",
+        Save: "حفظ",
+        "Quick resets": "إعادة ضبط سريعة",
+        Finish: "إنهاء",
+        "2-minute stretch": "تمدد لمدة دقيقتين",
+        "5 things you can see": "5 أشياء تراها",
+        "Wind down for sleep": "استرخاء قبل النوم",
+        "Stand tall and roll your shoulders back 5 times.":
+          "قف منتصباً وحرّك كتفيك للخلف 5 مرات.",
+        "Reach both arms up high and hold for 20 seconds.":
+          "ارفع ذراعيك عالياً وثبّت 20 ثانية.",
+        "Gently tilt your head to each side for 15 seconds.":
+          "أمل رأسك برفق إلى كل جانب 15 ثانية.",
+        "Bend forward slowly and let your arms hang for 20 seconds.":
+          "انحنِ للأمام ببطء ودع ذراعيك تتدليان 20 ثانية.",
+        "Open your chest: hands behind your back, lift gently and breathe.":
+          "افتح صدرك: يداك خلف ظهرك، ارفعهما برفق وتنفّس.",
+        "Shake out your hands and legs. Well done!": "حرّك يديك وساقيك. أحسنت!",
+        "Look around and name 5 things you can see.":
+          "انظر حولك وسمِّ 5 أشياء تراها.",
+        "Notice 4 things you can touch or feel.":
+          "لاحظ 4 أشياء يمكنك لمسها أو الشعور بها.",
+        "Listen and name 3 things you can hear.": "أنصت وسمِّ 3 أشياء تسمعها.",
+        "Find 2 things you can smell, or like the smell of.":
+          "جد شيئين يمكنك شمّهما أو تحب رائحتهما.",
+        "Name 1 good thing about yourself. Breathe in slowly.":
+          "اذكر شيئاً جميلاً واحداً فيك. تنفّس ببطء.",
+        "Put your phone away or dim the screen.":
+          "ابتعد عن هاتفك أو خفّض إضاءة الشاشة.",
+        "Do your night azkar if you haven’t yet.":
+          "اقرأ أذكار النوم إن لم تفعل بعد.",
+        "Take 5 slow breaths: in for 4, out for 6.":
+          "خذ 5 أنفاس بطيئة: شهيق 4 وزفير 6.",
+        "Think of one good thing from today.": "تذكّر شيئاً جميلاً من يومك.",
+        "Lights out. You did enough today.":
+          "أطفئ الأنوار. لقد فعلت ما يكفي اليوم.",
+        "Fully grown. Keep it blooming!": "اكتمل نموها. حافظ على إزهارها!",
+        "This week’s challenge": "تحدي هذا الأسبوع",
+        "Weekly review": "المراجعة الأسبوعية",
+        "Prayers ticked": "الصلوات المؤداة",
+        "Glasses of water": "أكواب الماء",
+        "Focus sessions": "جلسات التركيز",
+        "Tasks done": "المهام المنجزة",
+        "Check-ins": "تسجيلات الحضور",
+        "Gratitude notes": "ملاحظات الامتنان",
+        "No mood check-ins this week yet.":
+          "لا توجد تسجيلات مزاج هذا الأسبوع بعد.",
+        "Pray all five prayers on 4 days": "صلّ الصلوات الخمس في 4 أيام",
+        "Reach your water goal on 5 days": "حقق هدف الماء في 5 أيام",
+        "Finish 10 focus sessions": "أنهِ 10 جلسات تركيز",
+        "Do your morning azkar on 5 days": "اقرأ أذكار الصباح في 5 أيام",
+        "Write 5 gratitude notes": "اكتب 5 ملاحظات امتنان",
+        "Complete 12 tasks": "أنجز 12 مهمة",
+        "Check in on 6 days": "سجّل حضورك في 6 أيام",
+        "Small steps every day beat big plans someday.":
+          "خطوات صغيرة كل يوم أفضل من خطط كبيرة في يوم ما.",
+        "You don’t have to be perfect. You just have to begin.":
+          "لا يجب أن تكون مثالياً. يكفي أن تبدأ.",
+        "Tired is okay. Quitting is optional. Rest, then continue.":
+          "التعب لا بأس به. الاستسلام خيار. استرح ثم أكمل.",
+        "Your future self is watching. Make them proud today.":
+          "نفسك في المستقبل تراقبك. اجعلها فخورة بك اليوم.",
+        "Focus on the next ten minutes, not the whole mountain.":
+          "ركّز على الدقائق العشر القادمة، لا على الجبل كله.",
+        "Discipline is choosing what you want most over what you want now.":
+          "الانضباط أن تختار ما تريده أكثر على ما تريده الآن.",
+        "Progress is progress, even when it’s quiet.":
+          "التقدم تقدم، حتى لو كان هادئاً.",
+        "Hard days build the strongest minds.":
+          "الأيام الصعبة تبني أقوى العقول.",
+        "Indeed, with hardship comes ease.": "إن مع العسر يسراً.",
+        "Allah does not burden a soul beyond what it can bear.":
+          "لا يكلف الله نفساً إلا وسعها.",
+        "Whoever relies on Allah, He is enough for them.":
+          "ومن يتوكل على الله فهو حسبه.",
+        "That sounds really heavy. You don’t have to carry it all at once.":
+          "يبدو الأمر ثقيلاً فعلاً. لا يجب أن تحمله كله دفعة واحدة.",
+        "Rough day? Be gentle with yourself. A few slow breaths can help.":
+          "يوم صعب؟ كن لطيفاً مع نفسك. بعض الأنفاس البطيئة قد تفيد.",
+        "It’s okay not to be okay. Take it one small step at a time.":
+          "لا بأس ألّا تكون بخير. خذها خطوة صغيرة في كل مرة.",
+        "Thank you for being honest. Try a breathing round, then a glass of water.":
+          "شكراً لصدقك. جرّب جولة تنفّس، ثم كوب ماء.",
+        "Not your best day, and that’s allowed. Tomorrow is a fresh page.":
+          "ليس أفضل أيامك، وهذا مسموح. غداً صفحة جديدة.",
+        "A little low? Stretch or step outside for two minutes.":
+          "منخفض قليلاً؟ تمدّد أو اخرج دقيقتين.",
+        "Feeling off happens to everyone. Do one small thing that helps.":
+          "الشعور بالتعب يمرّ بالجميع. افعل شيئاً صغيراً يساعدك.",
+        "Be kind to yourself today. Rest counts as progress.":
+          "كن لطيفاً مع نفسك اليوم. الراحة تُعدّ تقدماً.",
+        "Steady is good. Maybe some water or a short walk to lift it?":
+          "الثبات جيد. ربما ماء أو مشي قصير ليرفع مزاجك؟",
+        "A calm in-between day. Pick one small win to aim for.":
+          "يوم هادئ بين بين. اختر إنجازاً صغيراً تسعى إليه.",
+        "Neutral is fine. Quick check: have you had water today?":
+          "الحياد لا بأس به. سؤال سريع: هل شربت ماءً اليوم؟",
+        "Not up, not down. A good time to focus on one task.":
+          "لا فرح ولا حزن. وقت جيد للتركيز على مهمة واحدة.",
+        "Nice, keep that energy going! One focused session could feel great.":
+          "رائع، حافظ على هذه الطاقة! جلسة تركيز واحدة قد تكون ممتعة.",
+        "Glad you’re doing well. Share a smile with someone today.":
+          "يسعدني أنك بخير. شارك ابتسامة مع أحدهم اليوم.",
+        "Good vibes! Lock in one task while the mood is on your side.":
+          "أجواء جميلة! أنجز مهمة واحدة والمزاج في صفك.",
+        "Love that. Remember this feeling on harder days.":
+          "جميل. تذكّر هذا الشعور في الأيام الأصعب.",
+        "Wonderful! Ride that wave and tackle something you’ve been putting off.":
+          "رائع! استغل هذه الموجة وأنجز شيئاً كنت تؤجله.",
+        "So glad to hear it. Gratitude makes good days last longer.":
+          "سعيد بسماع ذلك. الامتنان يطيل الأيام الجميلة.",
+        "You’re shining today. Pass some of that positivity on.":
+          "أنت متألق اليوم. انقل بعضاً من هذه الإيجابية للآخرين.",
+        "Amazing! Celebrate a small win before the day ends.":
+          "مذهل! احتفل بإنجاز صغير قبل نهاية اليوم.",
+        "Hydration check — go drink some water.":
+          "وقت الماء — اذهب واشرب كوب ماء.",
+        "Bro, you’re not a cactus — stay hydrated.":
+          "أنت لست صبّاراً — اشرب الماء.",
+        "Water break unlocked — go take a sip.":
+          "استراحة الماء بدأت — خذ رشفة.",
+        "Low battery? — recharge with some water.":
+          "طاقتك منخفضة؟ — اشحنها بكوب ماء.",
+        "Sip happens — time for a water break.":
+          "رشفة ماء — حان وقت استراحة الماء.",
+        "Hydration helps support learning — don’t forget your water!":
+          "الماء يدعم التعلّم — لا تنسَ الماء!",
+        "Pause. Breathe. Reset. — take 5 minutes for yourself.":
+          "توقف. تنفّس. أعد ضبط نفسك. — خذ 5 دقائق لنفسك.",
+        "Reset mode: ON — inhale peace, exhale stress.":
+          "وضع الاسترخاء — استنشق السلام وازفر التوتر.",
+        "Your brain deserves a break — step away for a minute.":
+          "عقلك يستحق استراحة — ابتعد دقيقة.",
+        "It’s okay to slow down — you’re not a robot.":
+          "لا بأس أن تبطئ — أنت لست آلة.",
+        "You good? — take a moment to check in with yourself.":
+          "هل أنت بخير؟ — خذ لحظة لتطمئن على نفسك.",
+        "Not everything needs fixing right now — just breathe.":
+          "ليس كل شيء يحتاج إصلاحاً الآن — فقط تنفّس.",
+        "Mental health check-in — how are you really feeling?":
+          "اطمئنان على صحتك النفسية — كيف تشعر فعلاً؟",
+        "Breathing exercise time — take a moment to relax and focus on your breathing.":
+          "وقت تمارين التنفس — خذ لحظة لتسترخي وتركّز على أنفاسك.",
+        "Lock-in mode — one task, one goal.":
+          "وضع التركيز — مهمة واحدة، هدف واحد.",
+        "The comeback starts now — one task at a time.":
+          "العودة تبدأ الآن — مهمة تلو الأخرى.",
+        "Procrastination called — don’t answer.": "التسويف يتصل — لا تردّ.",
+        "Future you says thanks — get that revision done.":
+          "نفسك في المستقبل تشكرك — أنجز المراجعة.",
+        "25 minutes. No distractions. — let’s get to work.":
+          "25 دقيقة. بلا مشتتات. — هيا نبدأ العمل.",
+        "Lock-in mode — time to get things done.":
+          "وضع التركيز — حان وقت الإنجاز.",
+        "Focus era activated — you’ve got this.":
+          "بدأت مرحلة التركيز — أنت قادر.",
+        "Stay focused — make the most of your homework time.":
+          "حافظ على تركيزك — استغل وقت واجباتك.",
+        "Pause the scroll — it’s time for Salah.":
+          "توقف عن التصفح — حان وقت الصلاة.",
+        "A reminder for your heart — take a moment for prayer.":
+          "تذكير لقلبك — خذ لحظة للصلاة.",
+        "Prayer time has arrived — may your prayer bring peace and blessings.":
+          "حان وقت الصلاة — جعل الله صلاتك سكينة وبركة.",
+        "A little dhikr, a little peace — take a moment to remember Allah.":
+          "قليل من الذكر، كثير من السكينة — اذكر الله لحظة.",
+        "Feed your soul, not just your feed — make time for remembrance.":
+          "اغذِ روحك لا شاشتك — خصص وقتاً للذكر.",
+        "Time to reconnect — don’t forget your Azkar.":
+          "وقت الاتصال بالله — لا تنسَ أذكارك.",
+        "Friendly reminder — take a moment to remember Allah through dhikr and supplication.":
+          "تذكير لطيف — خذ لحظة لتذكر الله بالذكر والدعاء.",
+        "What’s the vibe today? — check in with yourself.":
+          "كيف مزاجك اليوم؟ — اطمئن على نفسك.",
+        "Be honest, how are you? — your feelings matter.":
+          "كن صادقاً، كيف حالك؟ — مشاعرك مهمة.",
+        "You good? — take a second to check in.":
+          "هل أنت بخير؟ — خذ لحظة لتطمئن.",
+        "Small steps still count — progress is progress.":
+          "الخطوات الصغيرة تُحسب — التقدم تقدم.",
+        "You made it through yesterday — keep going today.":
+          "تجاوزت الأمس — واصل اليوم.",
+        "Break time — stretch, sip some water, rest your eyes.":
+          "وقت الاستراحة — تمدّد واشرب ماءً وأرح عينيك.",
+        "Jumu’ah Mubarak — don’t forget Surah al-Kahf today.":
+          "جمعة مباركة — لا تنسَ سورة الكهف اليوم.",
+        "Wind-down time — put the screen away and take a few slow breaths.":
+          "وقت الاسترخاء — ابتعد عن الشاشة وتنفّس ببطء.",
+        "Suhoor time — eat something and make your intention to fast.":
+          "وقت السحور — تناول شيئاً ونوِ الصيام.",
+        "Iftar is almost here — get ready and make dua.":
+          "اقترب الإفطار — استعد وادعُ الله.",
+        Sun: "أحد",
+        Mon: "إثنين",
+        Tue: "ثلاثاء",
+        Wed: "أربعاء",
+        Thu: "خميس",
+        Fri: "جمعة",
+        Sat: "سبت",
+      };
+      const PA = {
+          Fajr: "الفجر",
+          Dhuhr: "الظهر",
+          Asr: "العصر",
+          Maghrib: "المغرب",
+          Isha: "العشاء",
+        },
+        DM = {
+          Today: "اليوم",
+          Tomorrow: "غداً",
+          Sun: "الأحد",
+          Mon: "الإثنين",
+          Tue: "الثلاثاء",
+          Wed: "الأربعاء",
+          Thu: "الخميس",
+          Fri: "الجمعة",
+          Sat: "السبت",
+        },
+        TNA = {
+          Seed: "بذرة",
+          Sprout: "برعم",
+          Sapling: "شتلة",
+          "Young tree": "شجرة فتية",
+          "Growing tree": "شجرة نامية",
+          "Flowering tree": "شجرة مزهرة",
+        };
+      const RULES = [
+        [
+          /^Step (\d+) of 4 · study, salah and calm in one place\.$/,
+          "الخطوة $1 من 4 · الدراسة والصلاة والسكينة في مكان واحد.",
+        ],
+        [/^Step (\d+) of (\d+)$/, "الخطوة $1 من $2"],
+        [
+          /^Welcome back(?:, (.+))?$/,
+          (m, n) => "أهلاً بعودتك" + (n ? "، " + n : ""),
+        ],
+        [/^Hey(?:, (.+))?$/, (m, n) => "مرحباً" + (n ? "، " + n : "")],
+        [
+          /^How are you feeling today(?:, (.+))?\?$/,
+          (m, n) => "كيف حالك اليوم" + (n ? "، " + n : "") + "؟",
+        ],
+        [/^🔥 (\d+) days?$/, "🔥 $1 يوم"],
+        [
+          /^Next: (Fajr|Dhuhr|Asr|Maghrib|Isha) at (.+)$/,
+          (m, p, t) => "التالية: " + PA[p] + " عند " + t,
+        ],
+        [
+          /^(\d+) of (\d+) glasses · (\d+) of 5 prayers ticked$/,
+          "$1 من $2 أكواب · $3 من 5 صلوات",
+        ],
+        [
+          /^(\d+) of (\d+) glasses\. Tap a glass\.$/,
+          "$1 من $2 أكواب. اضغط على كوب.",
+        ],
+        [/^(\d+) of (\d+) done$/, "$1 من $2 منجز"],
+        [
+          /^(\d+) of (\d+)( · Done! \+15 points 🌟)?$/,
+          (m, a, b, c) => a + " من " + b + (c ? " · تم! +15 نقطة 🌟" : ""),
+        ],
+        [/^Day (\d+) · (\d+) days? left$/, "اليوم $1 · متبقٍ $2 يوماً"],
+        [/^Suhoor ends (.+) · Iftar (.+)$/, "السحور ينتهي $1 · الإفطار $2"],
+        [
+          /^Qibla is (\d+)° clockwise from north\.$/,
+          "القبلة $1° مع عقارب الساعة من الشمال.",
+        ],
+        [/Qur’an ([\d:-]+) \(meaning\)/, "القرآن $1 (معنى)"],
+        [/\(Ikhlas, Falaq, Nas\)/, "(الإخلاص، الفلق، الناس)"],
+        [/^(\d+) done$/, "$1 منجز"],
+        [/^(\d+) min$/, "$1 د"],
+        [/^(\d+) \/ (\d+) min$/, "$1 / $2 د"],
+        [/(\d+) min\/day/, "$1 د/يوم"],
+        [/^(\d+) min left · (\d+)s$/, "متبقٍ $1 د · $2 ث"],
+        [/^Glass (\d+)$/, "كوب $1"],
+        [/^Free today: (.+)$/, "وقت الفراغ اليوم: $1"],
+        [
+          /^Free slot: (Today|Tomorrow|Sun|Mon|Tue|Wed|Thu|Fri|Sat) (.+) · (\d+) min$/,
+          (m, d, t, n) => "وقت متاح: " + DM[d] + " " + t + " · " + n + " د",
+        ],
+        [
+          /^(\d+) days? left · revise about (\d+) min a day\. (.*)$/,
+          (m, d, p, x) =>
+            d +
+            " يوم متبقٍ · راجع نحو " +
+            p +
+            " دقيقة يومياً. " +
+            x
+              .replace("Today’s slot: ", "موعد اليوم: ")
+              .replace("No free slot left today.", "لا يوجد وقت متاح اليوم."),
+        ],
+        [/^Your tree: (.+)$/, (m, n) => "شجرتك: " + (TNA[n] || n)],
+        [
+          /^(\d+) more points to grow\. Prayers, water, focus, tasks and check-ins all help\.$/,
+          "باقٍ $1 نقطة لتنمو. الصلاة والماء والتركيز والمهام وتسجيل الحضور كلها تساعد.",
+        ],
+        [/^last week (\d+)$/, "الأسبوع الماضي $1"],
+        [/^Average mood: (.+)$/, "متوسط المزاج: $1"],
+        [
+          /^Time’s up for (.+) — your limit is reached, take a break\.$/,
+          "انتهى وقت $1 — وصلت إلى الحد، خذ استراحة.",
+        ],
+        [
+          /^Pause the scroll — (Fajr|Dhuhr|Asr|Maghrib|Isha) is almost over, have you prayed\?$/,
+          (m, p) => "توقف عن التصفح — اقتربت نهاية وقت " + PA[p] + "، هل صليت؟",
+        ],
+        [
+          /Only prayer, wind-down and revision reminders\./,
+          "تذكيرات الصلاة والاسترخاء والمراجعة فقط.",
+        ],
+        [
+          /Next exam: (.+) in (\d+) days\./,
+          "الامتحان القادم: $1 بعد $2 يوماً.",
+        ],
+        [/(\d) AM\b/g, "$1 ص"],
+        [/(\d) PM\b/g, "$1 م"],
+      ];
+      function T(s) {
+        if (S.lang !== "ar" || typeof s !== "string") return s;
+        const k = s.trim();
+        if (!k) return s;
+        if (AR[k]) return s.replace(k, AR[k]);
+        const q = k.match(/^“([\s\S]*)”$/);
+        if (q && AR[q[1]]) return s.replace(k, "“" + AR[q[1]] + "”");
+        let o = s;
+        for (const [re, rep] of RULES) o = o.replace(re, rep);
+        return o;
+      }
+      function localize(root) {
+        const w = document.createTreeWalker(root, NodeFilter.SHOW_TEXT),
+          L = [];
+        let n;
+        while ((n = w.nextNode())) L.push(n);
+        L.forEach((n) => {
+          const v = n.nodeValue;
+          if (v.trim()) {
+            const q = T(v);
+            if (q !== v) n.nodeValue = q;
+          }
+        });
+        root.querySelectorAll("[placeholder],[aria-label]").forEach((e) =>
+          ["placeholder", "aria-label"].forEach((a) => {
+            const v = e.getAttribute(a);
+            if (v) e.setAttribute(a, T(v));
+          })
+        );
+      }
+      Object.assign(AR, {
+        N: "ش",
+        "Backup code": "رمز النسخ",
+        Name: "الاسم",
+        Lagoon: "بحيرة",
+        Forest: "غابة",
+        Midnight: "منتصف الليل",
+        Dusk: "الغسق",
+        Blush: "وردي",
+        Lilac: "ليلكي",
+        "Keep checking in. After a few days I’ll show what lifts your mood.":
+          "واصل التسجيل. بعد بضعة أيام سأريك ما يرفع مزاجك.",
+      });
+      RULES.unshift(
+        [
+          /^(Fajr|Dhuhr|Asr|Maghrib|Isha) prayed$/,
+          (m, p) => "تمت صلاة " + PA[p],
+        ],
+        [/^Your tree, stage (\d+) of 6$/, "شجرتك، المرحلة $1 من 6"],
+        [
+          /^(Sun|Mon|Tue|Wed|Thu|Fri|Sat) (\d+ [AP]M)$/,
+          (m, d, t) => DM[d] + " " + t,
+        ],
+        [
+          /^Your mood averages ([\d.]+) on days you reach your water goal and ([\d.]+) on other days \(out of 4\)\.$/,
+          "متوسط مزاجك $1 في الأيام التي تحقق فيها هدف الماء و$2 في الأيام الأخرى (من 4).",
+        ],
+        [
+          /^Your mood averages ([\d.]+) on days with a focus session and ([\d.]+) on other days \(out of 4\)\.$/,
+          "متوسط مزاجك $1 في الأيام التي تنجز فيها جلسة تركيز و$2 في الأيام الأخرى (من 4).",
+        ]
+      );
+      Object.assign(AR, {
+        "Your age": "عمرك",
+        "Enter your age to see a healthy water goal.":
+          "أدخل عمرك لترى هدف الماء الصحي.",
+        "A general guide, not medical advice.": "إرشاد عام وليس نصيحة طبية.",
+        "Use suggested goal": "استخدم الهدف المقترح",
+        "Add a glass": "أضف كوباً",
+        "Count down to Ramadan, then turn on by itself":
+          "يعدّ تنازلياً حتى رمضان ثم يعمل تلقائياً",
+        "Try the full Ramadan mode": "جرّب وضع رمضان كاملاً",
+        "Ramadan 🌙": "رمضان 🌙",
+        "Great start! Every glass counts.": "بداية رائعة! كل كوب مهم.",
+        "First sips done. Keep it flowing.": "أولى الرشفات تمّت. واصل.",
+        "Your body says thank you.": "جسمك يشكرك.",
+        "A quarter of the way. Nice rhythm!": "ربع الطريق. إيقاع جميل!",
+        "You’re building a great habit.": "أنت تبني عادة رائعة.",
+        "Nice and steady. Keep going.": "ثابت وجميل. واصل.",
+        "Halfway there! Your focus will thank you.":
+          "وصلت إلى المنتصف! تركيزك سيشكرك.",
+        "Half done. You’ve got this.": "نصف الطريق. أنت قادر.",
+        "Halfway to your goal. Great job!": "في منتصف الطريق إلى هدفك. أحسنت!",
+        "Almost there! One last push.": "اقتربت! دفعة أخيرة.",
+        "So close to your goal. Finish strong!":
+          "قريب جداً من هدفك. أنهِ بقوة!",
+        "Just a little more. You’re nearly there!":
+          "القليل فقط. أوشكت على الوصول!",
+        "Goal reached! Amazing work today 🎉": "تحقق الهدف! عمل رائع اليوم 🎉",
+        "You did it! Your body is happy 💧": "أنجزت! جسمك سعيد 💧",
+        "Water goal complete. Proud of you!": "اكتمل هدف الماء. فخور بك!",
+        "Above and beyond! Staying hydrated is a gift to yourself.":
+          "تجاوزت المطلوب! الترطيب هدية لنفسك.",
+        "Extra glass, extra energy. Keep listening to your body.":
+          "كوب إضافي، طاقة إضافية. استمع لجسمك دائماً.",
+        "Beyond your goal. Just listen to your thirst.":
+          "فوق هدفك. اتبع إشارة العطش فقط.",
+      });
+      RULES.unshift(
+        [/^(\d+) days? until Ramadan$/, "باقٍ $1 يوماً على رمضان"],
+        [
+          /^Suggested for you: (\d+) glasses a day \(about ([\d.]+) L\)(, including 1 extra for the hot season)?\. You can set your own goal\.$/,
+          (m, n, l, h) =>
+            "المقترح لك: " +
+            n +
+            " أكواب يومياً (حوالي " +
+            l +
+            " لتر)" +
+            (h ? "، منها كوب إضافي لفصل الحر" : "") +
+            ". يمكنك تحديد هدفك الخاص.",
+        ]
+      );
+      let rdc = { d: "", n: 0 };
+      function daysToRamadan() {
+        if (rdc.d === today()) return rdc.n;
+        let n = 0;
+        for (let i = 1; i <= 400; i++) {
+          const x = hijri(new Date(Date.now() + i * 864e5));
+          if (x && x.m === 9) {
+            n = i;
+            break;
+          }
+        }
+        rdc = { d: today(), n };
+        return n;
+      }
+      function recWater() {
+        const a = +S.age;
+        if (!a || a < 1 || a > 110) return null;
+        let g = a <= 3 ? 4 : a <= 8 ? 5 : a <= 13 ? 7 : 8;
+        if (a >= 14 && S.gender === "Male") g++;
+        const m = new Date().getMonth(),
+          nth = !loc.ok || loc.lat >= 0,
+          hot = nth ? m >= 5 && m <= 7 : m === 11 || m <= 1;
+        if (hot) g++;
+        return { g, hot };
+      }
+      const recText = () => {
+        const x = recWater();
+        return x
+          ? `Suggested for you: ${x.g} glasses a day (about ${(
+              x.g * 0.25
+            ).toFixed(1)} L)${
+              x.hot ? ", including 1 extra for the hot season" : ""
+            }. You can set your own goal.`
+          : "Enter your age to see a healthy water goal.";
+      };
+      const WM = {
+        start: [
+          "Great start! Every glass counts.",
+          "First sips done. Keep it flowing.",
+          "Your body says thank you.",
+        ],
+        quarter: [
+          "A quarter of the way. Nice rhythm!",
+          "You’re building a great habit.",
+          "Nice and steady. Keep going.",
+        ],
+        half: [
+          "Halfway there! Your focus will thank you.",
+          "Half done. You’ve got this.",
+          "Halfway to your goal. Great job!",
+        ],
+        near: [
+          "Almost there! One last push.",
+          "So close to your goal. Finish strong!",
+          "Just a little more. You’re nearly there!",
+        ],
+        done: [
+          "Goal reached! Amazing work today 🎉",
+          "You did it! Your body is happy 💧",
+          "Water goal complete. Proud of you!",
+        ],
+        over: [
+          "Above and beyond! Staying hydrated is a gift to yourself.",
+          "Extra glass, extra energy. Keep listening to your body.",
+          "Beyond your goal. Just listen to your thirst.",
+        ],
+      };
+      function waterMsg() {
+        const r = S.cups / S.goal,
+          k =
+            S.cups <= 0
+              ? ""
+              : r > 1
+              ? "over"
+              : r === 1
+              ? "done"
+              : r >= 0.75
+              ? "near"
+              : r >= 0.5
+              ? "half"
+              : r >= 0.25
+              ? "quarter"
+              : "start";
+        return k ? pick(WM[k]) : "";
+      }
+      Object.assign(AR, {
+        Birds: "طيور",
+        "Pick one. You can change it any time. Prayer reminders always stay on.":
+          "اختر واحداً. يمكنك تغييره في أي وقت. تذكيرات الصلاة تبقى دائماً.",
+        "All reminders are on: prayer, water, study, breathing and check-ins.":
+          "كل التذكيرات تعمل: الصلاة والماء والدراسة والتنفس والاطمئنان.",
+        "For exam time. Only prayer, revision and bedtime reminders come through. Water, breathing, dhikr and mood reminders are muted so you can focus.":
+          "لوقت الامتحانات. تصل تذكيرات الصلاة والمراجعة والنوم فقط. تُكتم تذكيرات الماء والتنفس والذكر والمزاج لتتفرغ للتركيز.",
+        "For school breaks. Study reminders pause. Prayer, water, breathing and check-ins keep going.":
+          "لإجازات المدرسة. تتوقف تذكيرات الدراسة. تستمر تذكيرات الصلاة والماء والتنفس والاطمئنان.",
+        "Move your data to another phone or browser. Tap Show backup code and copy it. On the other device, open the app, go to Settings and paste it under Restore from a code. This is a manual backup, not automatic sync.":
+          "انقل بياناتك إلى هاتف أو متصفح آخر. اضغط على إظهار رمز النسخ وانسخه. في الجهاز الآخر افتح التطبيق، ثم الإعدادات، والصقه في استعادة من رمز. هذا نسخ احتياطي يدوي وليس مزامنة تلقائية.",
+        "These work on your phone. Open the app link in your phone’s browser and type one of the words below at the end of the link. Then add it to your home screen (iPhone: Share, then Add to Home Screen. Android: browser menu, then Add to Home screen).":
+          "تعمل هذه على هاتفك. افتح رابط التطبيق في متصفح هاتفك واكتب إحدى الكلمات أدناه في نهاية الرابط. ثم أضفه إلى الشاشة الرئيسية (آيفون: مشاركة ثم إضافة إلى الشاشة الرئيسية. أندرويد: قائمة المتصفح ثم إضافة إلى الشاشة الرئيسية).",
+        "Real widgets and lock-screen buttons come with the phone app. Each browser keeps its own data, so if a shortcut opens empty, use Backup and transfer to restore it.":
+          "الأدوات الحقيقية وأزرار شاشة القفل تأتي مع تطبيق الهاتف. كل متصفح يحتفظ ببياناته، فإن فُتح الاختصار فارغاً فاستخدم النسخ الاحتياطي والنقل لاستعادتها.",
+      });
+      RULES.unshift([
+        /Only prayer, revision and bedtime reminders are on\./,
+        "تذكيرات الصلاة والمراجعة والنوم فقط.",
+      ]);
+      Object.assign(AR, {
+        "Reset schedule": "مسح الجدول",
+        "Tap again to clear everything": "اضغط مرة أخرى لمسح كل شيء",
+        "Your tree grew to a new stage! 🎉": "كبرت شجرتك إلى مرحلة جديدة! 🎉",
+      });
+      let bkc = "",
+        bkm = "";
+      const langCard = () =>
+        `<div class="surf"><h3>Language · اللغة</h3><div class="pills" style="margin-top:8px"><button class="pill ${
+          S.lang !== "ar" ? "on" : ""
+        }" data-a="lang" data-v="en">English</button><button class="pill ${
+          S.lang === "ar" ? "on" : ""
+        }" data-a="lang" data-v="ar">العربية</button></div></div>`;
+      const MODES = [
+        [
+          "",
+          "Normal",
+          "All reminders are on: prayer, water, study, breathing and check-ins.",
+        ],
+        [
+          "exam",
+          "Exam mode",
+          "For exam time. Only prayer, revision and bedtime reminders come through. Water, breathing, dhikr and mood reminders are muted so you can focus.",
+        ],
+        [
+          "holiday",
+          "Holiday mode",
+          "For school breaks. Study reminders pause. Prayer, water, breathing and check-ins keep going.",
+        ],
+      ];
+      const modesCard = () =>
+        `<div class="surf"><h3>Modes</h3><p class="mut" style="margin:4px 0 10px">Pick one. You can change it any time. Prayer reminders always stay on.</p>${MODES.map(
+          ([k, t, d]) =>
+            `<button class="mode ${
+              S.mode === k ? "on" : ""
+            }" data-a="md" data-v="${k}"><b>${t}</b><span>${d}</span></button>`
+        ).join("")}</div>`;
+      const shortcutsCard = () =>
+        `<div class="surf"><h3>Widgets and shortcuts</h3><p class="mut">These work on your phone. Open the app link in your phone’s browser and type one of the words below at the end of the link. Then add it to your home screen (iPhone: Share, then Add to Home Screen. Android: browser menu, then Add to Home screen).</p><p style="margin:6px 0"><b>#water</b> <span>adds a glass</span><br><b>#prayer</b> <span>opens prayers</span><br><b>#breathe</b> <span>starts breathing</span><br><b>#focus</b> <span>starts the timer</span></p><p class="mut" style="margin:8px 0 0">Real widgets and lock-screen buttons come with the phone app. Each browser keeps its own data, so if a shortcut opens empty, use Backup and transfer to restore it.</p></div>`;
+      const backupCard = () =>
+        `<div class="surf"><h3>Backup and transfer</h3><p class="mut">Move your data to another phone or browser. Tap Show backup code and copy it. On the other device, open the app, go to Settings and paste it under Restore from a code. This is a manual backup, not automatic sync.</p><button class="btn alt sm" data-a="bk">${
+          bkc ? "Hide backup code" : "Show backup code"
+        }</button>${
+          bkc
+            ? `<textarea readonly rows="4" style="margin-top:8px" aria-label="Backup code" onfocus="this.select()">${bkc}</textarea>`
+            : ""
+        }<p class="mut" style="margin:12px 0 6px">Restore from a code</p><textarea id="rbk" rows="3" placeholder="Paste your backup code here"></textarea><button class="btn alt sm" style="margin-top:8px" data-a="rst">Restore</button>${
+          bkm ? `<p class="mut">${bkm}</p>` : ""
+        }</div>`;
+      function modeCard() {
+        if (!S.mode) return "";
+        const d0 = new Date().setHours(0, 0, 0, 0),
+          ex = S.exams
+            .map((e) => ({
+              n: e.n,
+              d: Math.round((new Date(e.date + "T00:00") - d0) / 864e5),
+            }))
+            .filter((e) => e.d >= 0)
+            .sort((a, b) => a.d - b.d)[0];
+        return S.mode === "exam"
+          ? `<div class="surf"><h3>Exam mode is on</h3><p class="mut" style="margin:4px 0 0">Only prayer, revision and bedtime reminders are on.${
+              ex ? " Next exam: " + esc(ex.n) + " in " + ex.d + " days." : ""
+            }</p></div>`
+          : `<div class="surf"><h3>Holiday mode is on</h3><p class="mut" style="margin:4px 0 0">Study reminders are paused. Enjoy your break!</p></div>`;
+      }
+      let hashRan = "";
+      function runHash() {
+        const h = (location.hash || "").replace("#", "");
+        if (!S.done || !h || hashRan === h) return;
+        hashRan = h;
+        if (h === "water") {
+          S.cups = Math.min(20, S.cups + 1);
+          S.wm = waterMsg();
+          tab = "well";
+        } else if (h === "prayer") tab = "faith";
+        else if (h === "focus") {
+          tab = "study";
+          pm.run = true;
+        } else if (h === "breathe") {
+          tab = "well";
+          render();
+          bstart();
+          return;
+        } else return;
+        save();
+        render();
+      }
+      function greet() {
+        const n = S.name ? ", " + S.name : "";
+        return [
+          `Welcome back${n}`,
+          `Hey${n}`,
+          `How are you feeling today${n}?`,
+        ][S.lg < 0 ? 0 : S.lg];
+      }
+      function settings() {
+        return `<div class="row sp" style="margin:6px 0"><h2>Settings</h2><button class="btn alt sm" data-a="go" data-v="today">Done</button></div>
+ ${langCard()}<div class="surf"><h3>About you</h3><input id="sn" placeholder="Your name" value="${esc(
+          S.name
+        )}" aria-label="Name"><input id="sa" type="number" min="3" max="100" placeholder="Your age" value="${
+          S.age || ""
+        }" aria-label="Your age" style="margin-top:10px"><div class="pills" style="margin-top:10px">${[
+          "Male",
+          "Female",
+        ]
+          .map(
+            (v) =>
+              `<button class="pill ${
+                S.gender === v ? "on" : ""
+              }" data-a="gd" data-v="${v}">${v}</button>`
+          )
+          .join("")}</div></div>
+ <div class="surf"><h3>Water</h3><p class="mut">Glasses you usually drink a day</p><input id="su" type="number" min="0" max="20" value="${
+   S.usual || ""
+ }"><p class="mut">Daily goal (glasses)</p><input id="sg" type="number" min="1" max="20" value="${
+          S.goal
+        }"><p class="mut" id="srec" style="margin:10px 0 0">${recText()}</p><button class="btn alt sm" data-a="usegoal" style="margin-top:8px">Use suggested goal</button><p class="mut" style="margin:8px 0 0;font-size:12px">A general guide, not medical advice.</p></div>
+ <div class="surf"><h3>Do you pray on time?</h3><div class="pills">${[
+   "yes",
+   "sometimes",
+   "not yet",
+ ]
+   .map(
+     (v) =>
+       `<button class="pill ${
+         S.onTime === v ? "on" : ""
+       }" data-a="ot" data-v="${v}">${v}</button>`
+   )
+   .join("")}</div></div>
+ <div class="surf"><h3>Colours</h3><div class="pills" style="margin-top:8px">${THEMES.map(
+   sw
+ ).join("")}</div></div>
+ <div class="surf"><h3>Notifications</h3><div class="row sp"><span class="mut">Reminders when the app is closed</span><button class="btn ${
+   S.notif ? "" : "alt"
+ } sm" data-a="nt">${S.notif ? "On" : "Muted"}</button></div></div>
+ <div class="surf"><h3>Location</h3><p class="mut">${
+   loc.ok
+     ? "Using your location for prayer times."
+     : "Used for accurate prayer times."
+ }</p><button class="btn alt sm" data-a="loc">Update location</button></div>
+ <div class="surf"><h3>Timetable and subjects</h3><button class="btn alt sm" data-a="go" data-v="study">Edit in Study</button></div>
+ ${modesCard()}<div class="surf"><h3>Reminders</h3><p class="mut">Quiet hours (only prayer reminders come through)</p><div class="row"><select id="sqs" aria-label="Quiet from">${hrOpts(
+          S.qs
+        )}</select><span>to</span><select id="sqe" aria-label="Quiet until">${hrOpts(
+          S.qe
+        )}</select></div><p class="mut">Bedtime (wind-down reminder 30 minutes before)</p><select id="sbd" aria-label="Bedtime">${hrOpts(
+          S.bed
+        )}</select><p class="mut" style="margin:12px 0 0">At most 6 reminders a day, at least 45 minutes apart, and fewer of the kinds you ignore.</p></div>
+ <div class="surf"><h3>Ramadan</h3><div class="row sp"><span class="mut">Count down to Ramadan, then turn on by itself</span><button class="btn ${
+   S.ram ? "" : "alt"
+ } sm" data-a="rm">${
+          S.ram ? "On" : "Off"
+        }</button></div><div class="row sp" style="margin-top:10px"><span class="mut">Try the full Ramadan mode</span><button class="btn ${
+          S.rtest ? "" : "alt"
+        } sm" data-a="rt">${S.rtest ? "On" : "Off"}</button></div></div>
+ ${shortcutsCard()}${backupCard()}<div class="surf"><h3>Setup</h3><p class="mut">See the welcome questions again. Your answers stay filled in.</p><button class="btn alt sm" data-a="redo">Run setup again</button></div>`;
+      }
+      function render() {
+        applyTheme();
+        let h;
+        if (!S.done) h = ob();
+        else
+          h =
+            topbar() +
+            { today: today_, faith, study, well: well, settings, rev: review }[
+              tab
+            ]() +
+            `<nav class="tabs">${[
+              ["today", "Today"],
+              ["faith", "Faith"],
+              ["study", "Study"],
+              ["well", "Wellbeing"],
+              ["rev", "Review"],
+            ]
+              .map(
+                ([k, l]) =>
+                  `<button class="${
+                    tab === k ? "on" : ""
+                  }" data-a="go" data-v="${k}">${l}</button>`
+              )
+              .join("")}</nav>`;
+        const y = scrollY;
+        $("#app").innerHTML = h;
+        document.documentElement.lang = S.lang === "ar" ? "ar" : "en";
+        document.documentElement.dir = S.lang === "ar" ? "rtl" : "ltr";
+        if (S.lang === "ar") localize($("#app"));
+        scrollTo(0, y);
+      }
+      function bstart() {
+        if (br) {
+          clearInterval(br.t);
+          br = null;
+          render();
+          return;
+        }
+        const P = [
+            [4, 4, 4, 4],
+            [4, 7, 8, 0],
+            [5, 0, 5, 0],
+          ][S.bp || 0],
+          L = ["Breathe in", "Hold", "Breathe out", "Hold"],
+          end = Date.now() + (S.bm || 5) * 60000;
+        let ph = 0,
+          left = 0;
+        br = {};
+        const step = () => {
+          while (!P[ph]) ph = (ph + 1) % 4;
+          const o = $("#orb");
+          if (!o) return;
+          left = P[ph];
+          o.textContent = T(L[ph]);
+          o.style.transition =
+            "transform " + (ph % 2 ? 0 : left) + "s ease-in-out";
+          o.style.transform = ph < 2 ? "scale(1.55)" : "scale(1)";
+        };
+        render();
+        step();
+        br.t = setInterval(() => {
+          const r = end - Date.now();
+          if (r <= 0) {
+            clearInterval(br.t);
+            br = null;
+            render();
+            return;
+          }
+          left--;
+          if (left <= 0) {
+            ph = (ph + 1) % 4;
+            step();
+          }
+          const t = $("#brt");
+          if (t)
+            t.textContent = T(
+              Math.ceil(r / 60000) + " min left · " + Math.max(left, 0) + "s"
+            );
+        }, 1000);
+      }
+      function addTodo() {
+        const i = $("#tdn");
+        if (i && i.value.trim()) {
+          S.todos.push({
+            t: i.value.trim(),
+            d: false,
+            m: +$("#tdm").value || 60,
+            day: +$("#tdd").value,
+          });
+          save();
+          render();
+        }
+      }
+      function addGoal() {
+        const n = $("#gn").value.trim();
+        if (n) S.goals.push({ n, lim: +$("#gl").value || 45, spent: 0 });
+      }
+      document.addEventListener("click", (e) => {
+        const b = e.target.closest("[data-a]");
+        if (!b) return;
+        const a = b.dataset.a,
+          v = b.dataset.v,
+          i = +b.dataset.i;
+        if ($("#qn")) {
+          S.name = $("#qn").value.trim();
+          S.age = $("#qa").value;
+          S.usual = $("#q1").value;
+          S.goal = Math.max(1, +$("#q2").value || 8);
+        }
+        const AM = {
+          cup: "water",
+          cupi: "water",
+          bstart: "calm",
+          mood: "mood",
+          pst: "study",
+          run: "study",
+          td: "study",
+          az: "dhikr",
+        };
+        if (AM[a]) {
+          S.ign[AM[a]] = 0;
+          delete S.pend[AM[a]];
+        }
+        if (a === "next") {
+          if (S.step === 0) {
+            S.name = $("#qn").value.trim();
+            S.age = $("#qa").value;
+            S.usual = $("#q1").value;
+            S.goal = Math.max(1, +$("#q2").value || 8);
+          }
+          if (S.step === 3) {
+            if ($("#gn") && $("#gn").value.trim()) addGoal();
+            S.done = true;
+            getLoc();
+            try {
+              Notification.requestPermission();
+            } catch (x) {}
+            save();
+            return render();
+          }
+          S.step++;
+        } else if (a === "back") S.step--;
+        else if (a === "ot") S.onTime = v;
+        else if (a === "gd") S.gender = v;
+        else if (a === "nq") qi = (qi + 1) % Q.length;
+        else if (a === "redo") {
+          S.done = false;
+          S.step = 0;
+          tab = "today";
+        } else if (a === "rt") S.rtest = !S.rtest;
+        else if (a === "rm") S.ram = !S.ram;
+        else if (a === "usegoal") {
+          const x = recWater();
+          if (x) S.goal = x.g;
+        } else if (a === "kh") S.kahf = S.kahf === today() ? "" : today();
+        else if (a === "tpa") {
+          const x = $("#tpn");
+          if (x && x.value.trim() && S.top3.length < 3)
+            S.top3.push({ t: x.value.trim(), d: false });
+        } else if (a === "tpd") {
+          const t = S.top3[i];
+          t.d = !t.d;
+          S.tdn += t.d ? 1 : -1;
+        } else if (a === "tpx") {
+          const t = S.top3[i];
+          if (t.d) S.tdn--;
+          S.top3.splice(i, 1);
+        } else if (a === "exa") {
+          const n = $("#exn").value.trim(),
+            d = $("#exd").value;
+          if (n && d) S.exams.push({ n, date: d, h: +$("#exh").value || 8 });
+        } else if (a === "exx") S.exams.splice(i, 1);
+        else if (a === "snd") {
+          sound(v);
+          snd = v;
+        } else if (a === "act") {
+          act = v;
+          as = 0;
+        } else if (a === "anx") {
+          as++;
+          if (as >= ACT[act].s.length) act = null;
+        } else if (a === "abk") as = Math.max(0, as - 1);
+        else if (a === "gsv") {
+          const x = $("#gri");
+          if (x) S.gr = x.value.trim();
+        } else if (a === "qs") qstart();
+        else if (a === "lang") S.lang = v;
+        else if (a === "rsch") {
+          if (!rsConf) {
+            rsConf = true;
+            setTimeout(() => {
+              rsConf = false;
+              render();
+            }, 4000);
+          } else {
+            S.busy = {};
+            rsConf = false;
+          }
+        } else if (a === "md") S.mode = v;
+        else if (a === "bk")
+          bkc = bkc
+            ? ""
+            : btoa(unescape(encodeURIComponent(JSON.stringify(S))));
+        else if (a === "rst") {
+          try {
+            const x = JSON.parse(
+              decodeURIComponent(escape(atob(($("#rbk").value || "").trim())))
+            );
+            if (!x || typeof x !== "object" || !("done" in x)) throw 0;
+            S = Object.assign(fresh(), x);
+            rollDay();
+            pm = { mode: "f", left: S.pomo.f * 60, run: false, n: 0 };
+            bkc = "";
+            bkm = "Backup restored.";
+          } catch (e) {
+            bkm = "That code didn’t work.";
+          }
+        } else if (a === "settings") {
+          tab = "settings";
+          pk = false;
+        } else if (a === "nt") {
+          S.notif = !S.notif;
+          try {
+            if (S.notif) Notification.requestPermission();
+          } catch (x) {}
+        } else if (a === "th") {
+          S.theme = +v;
+          pk = false;
+        } else if (a === "themes") pk = !pk;
+        else if (a === "loc") getLoc();
+        else if (a === "cell") {
+          const k = b.dataset.k;
+          if (S.busy[k]) delete S.busy[k];
+          else S.busy[k] = 1;
+        } else if (a === "dayfill") {
+          const ks = [8, 9, 10, 11, 12, 13, 14].map((h) => i + "_" + h),
+            all = ks.every((k) => S.busy[k]);
+          ks.forEach((k) => (all ? delete S.busy[k] : (S.busy[k] = 1)));
+        } else if (a === "addg") addGoal();
+        else if (a === "delg") {
+          if (running === i) running = -1;
+          S.goals.splice(i, 1);
+        } else if (a === "go") {
+          tab = v;
+          pk = false;
+        } else if (a === "ck") {
+          S.streak = S.last === yest() ? S.streak + 1 : 1;
+          S.last = today();
+        } else if (a === "cup") {
+          S.cups = Math.min(20, S.cups + 1);
+          S.wm = waterMsg();
+        } else if (a === "cupi") {
+          S.cups = S.cups === i + 1 ? i : i + 1;
+          S.wm = waterMsg();
+        } else if (a === "pray") S.prayed[i] = !S.prayed[i];
+        else if (a === "azs") S.azs = v;
+        else if (a === "az") {
+          const z = AZS[S.azs][1][i],
+            k = S.azs + i;
+          S.azkar[k] = ((S.azkar[k] || 0) + 1) % (z[1] + 1);
+        } else if (a === "run") running = running === i ? -1 : i;
+        else if (a === "pst") pm.run = !pm.run;
+        else if (a === "prs") {
+          pm = { mode: "f", left: S.pomo.f * 60, run: false, n: pm.n };
+        } else if (a === "psk") pmNext(false);
+        else if (a === "td") {
+          const t = S.todos[i];
+          t.d = !t.d;
+          S.tdn += t.d ? 1 : -1;
+        } else if (a === "tdx") S.todos.splice(i, 1);
+        else if (a === "tda") return addTodo();
+        else if (a === "bp") S.bp = +v;
+        else if (a === "bm") S.bm = +v;
+        else if (a === "bstart") return bstart();
+        else if (a === "mood") {
+          S.mood = +v;
+          S.mm = pick(MOOD[+v]);
+        }
+        save();
+        render();
+      });
+      document.addEventListener("change", (e) => {
+        const id = e.target.id;
+        if (id === "sqs" || id === "sqe" || id === "sbd") {
+          S[{ sqs: "qs", sqe: "qe", sbd: "bed" }[id]] = +e.target.value;
+          save();
+          return;
+        }
+        if (id === "sn") {
+          S.name = e.target.value.trim();
+          save();
+          return;
+        }
+        if (id === "su") {
+          S.usual = e.target.value;
+          save();
+          return;
+        }
+        if (id === "sg") {
+          S.goal = Math.max(1, Math.min(20, +e.target.value || 8));
+          S.cups = Math.min(S.cups, S.goal);
+          save();
+          return;
+        }
+        if (id === "pf" || id === "pb") {
+          const x = Math.max(1, Math.min(120, +e.target.value || 25));
+          if (id === "pf") S.pomo.f = x;
+          else S.pomo.b = x;
+          pm.left = (pm.mode === "f" ? S.pomo.f : S.pomo.b) * 60;
+          pm.run = false;
+          save();
+          render();
+        }
+      });
+      document.addEventListener("keydown", (e) => {
+        if (e.key === "Enter" && e.target.id === "tdn") addTodo();
+        if (e.key === "Enter" && e.target.id === "tpn")
+          $("[data-a=tpa]").click();
+      });
+      document.addEventListener("input", (e) => {
+        const id = e.target.id;
+        if (id !== "qa" && id !== "sa") return;
+        const prev = recWater();
+        S.age = e.target.value;
+        const x = recWater(),
+          el = $(id === "qa" ? "#rec" : "#srec");
+        if (el) el.textContent = T(recText());
+        if (id === "qa" && x) {
+          const q = $("#q2");
+          if (q && (q.value === "" || +q.value === (prev ? prev.g : S.goal)))
+            q.value = x.g;
+        }
+        if (id === "sa") save();
+      });
+      document.addEventListener("visibilitychange", () => {
+        if (!document.hidden && rollDay()) {
+          save();
+          render();
+        }
+      });
+      {
+        let g = Math.floor(Math.random() * 3);
+        if (g === S.lg) g = (g + 1) % 3;
+        S.lg = g;
+        save();
+      }
+      applyTheme();
+      setTimes();
+      if (S.done) getLoc();
+      render();
+      runHash();
+      addEventListener("hashchange", runHash);
+    </script>
+  </body>
+</html>
